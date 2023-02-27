@@ -11,16 +11,30 @@ string_length:
     ret
 
 print_string:
-    xor rax, rax
+    push rdi
+    call string_length
+    mov rdx, rax
+    pop rsi
+    mov rax, 1
+    mov rdi, 1
+    syscall
     ret
 
 
 print_char:
-    xor rax, rax
+    mov rax, 1
+    mov rsi, rdi
+    mov rdi, 1
+    mov rdx, 1
+    syscall
     ret
 
 print_newline:
-    xor rax, rax
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, 10
+    mov rdx, 1
+    syscall
     ret
 
 
