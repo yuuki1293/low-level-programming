@@ -1,15 +1,18 @@
 section .text
 
+; 文字列の長さを返す
+; rdi 文字列へのポインタ
 string_length:
     xor rax, rax
-.loop
+.loop:
     cmp byte [rdi+rax], 0
     je .end
     inc rax
     jmp .loop
-.end
+.end:
     ret
 
+; rdi 文字列へのポインタ
 print_string:
     push rdi
     call string_length
@@ -19,7 +22,6 @@ print_string:
     mov rdi, 1
     syscall
     ret
-
 
 print_char:
     mov rax, 1
