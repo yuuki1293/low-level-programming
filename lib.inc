@@ -23,12 +23,12 @@ print_string:
     syscall
     ret
 
+; rdi 文字コード
 print_char:
-    mov rax, 1
-    mov rsi, rdi
-    mov rdi, 1
-    mov rdx, 1
-    syscall
+    push rdi
+    mov rdi, rsp
+    call print_string
+    pop rdi
     ret
 
 print_newline:
