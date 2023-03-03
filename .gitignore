@@ -11,3 +11,4 @@ print_char*
 print_uint* 
 print_int* 
 read_char*
+read_word*
