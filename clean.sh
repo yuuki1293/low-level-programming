@@ -1,1 +1,0 @@
-rm print_string* string_copy* string_length* print_char* print_uint* -f
