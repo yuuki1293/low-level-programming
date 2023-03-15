@@ -178,8 +178,14 @@ parse_uint:
 ; rdi points to a string
 ; returns rax: number, rdx : length
 parse_int:
-    xor rax, rax
-    ret 
+    movzx r9, byte [rdi]
+    cmp r9b, '-'
+    jne parse_uint
+    inc rdi
+    call parse_uint
+    neg rax
+    inc rdx
+    ret
 
 ; rdi 文字列へのポインタ
 ; rsi 転送先バッファへのポインタ

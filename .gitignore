@@ -13,3 +13,5 @@ print_int*
 read_char*
 read_word*
 parse_uint*
+parse_int*
+string_equals*
