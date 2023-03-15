@@ -74,8 +74,23 @@ print_int:
     neg rdi
     jmp print_uint
 
+; rdi 文字列へのポインタ1
+; rsi 文字列へのポインタ2
+; rax 等しければ1、等しくなければ0を返す
 string_equals:
+    xor rcx, rcx
+    mov rax, 1
+.loop:
+    mov r8b, [rdi + rcx]
+    cmp r8b, [rsi + rcx]
+    je .eq
     xor rax, rax
+.eq:
+    cmp byte [rdi + rcx], 0
+    je .end
+    inc rcx
+    jmp .loop
+.end:
     ret
 
 read_char:
