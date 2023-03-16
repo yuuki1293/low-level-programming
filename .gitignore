@@ -3,6 +3,7 @@
 !*.*
 
 *.o
+*.so
 
 print_string* 
 string_copy* 
