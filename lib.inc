@@ -11,6 +11,7 @@ global read_word
 global parse_uint
 global parse_int
 global string_copy
+global exit
 
 ; 文字列の長さを返す
 ; rdi 文字列へのポインタ
@@ -246,3 +247,7 @@ string_copy:
     .too_long:
     xor rax, rax
     ret
+
+exit:
+    mov rax, 60
+    syscall
