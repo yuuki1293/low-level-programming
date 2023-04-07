@@ -1,5 +1,6 @@
 section .text
 global string_length
+global print_error
 global print_string
 global print_char
 global print_newline
@@ -23,6 +24,17 @@ string_length:
     inc rax
     jmp .loop
 .end:
+    ret
+
+; rdi 文字列へのポインタ
+print_error:
+    push rdi
+    call string_length
+    mov rdx, rax
+    pop rsi
+    mov rax, 1
+    mov rdi, 2
+    syscall
     ret
 
 ; rdi 文字列へのポインタ
