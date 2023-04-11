@@ -22,3 +22,20 @@ section .text
 %macro native 2
 native %1, %2, 0
 %endmacro
+
+; %1 ワードの名前
+; %2 ワード識別子の一部
+; %3 フラグ
+%macro colon 3
+section .data
+w_ %+ %2:
+    dq w_ %+ lw
+    db %1, 0
+    db %3
+
+%define lw w_ %+ %2
+%endmacro
+
+%macro colon 2
+colon %1, %2, 0
+%endmacro
