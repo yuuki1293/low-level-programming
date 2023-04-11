@@ -5,16 +5,16 @@
 ; %3 フラグ
 %macro native 3
 section .data
-w_ %+ %1:
+w_ %+ %2:
     dq lw
-    db %2, 0
+    db %1, 0
     db %3
-xt_ %+ %1:
-    dq %1 %+ _impl
+xt_ %+ %2:
+    dq %2 %+ _impl
 section .text
-%1 %+ _impl:
+%2 %+ _impl:
 
-%define lw w_ %+ %1
+%define lw w_ %+ %2
 %endmacro
 
 ; %1 ワードの名前
