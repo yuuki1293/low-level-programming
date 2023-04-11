@@ -19,8 +19,12 @@ _start:
     mov rdi, rsp
     sub rsp, 256
     mov rsi, 255
+.loop
+    push rsi
     call read_word
     mov rdi, rax
+    call string_length
+
     mov rsi, lw
     call find_word
     test rax, rax
