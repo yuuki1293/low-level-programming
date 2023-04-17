@@ -1,3 +1,5 @@
+%define head_size 10
+
 %define lw 0
 
 ; %1 ワードの名前
