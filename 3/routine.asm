@@ -7,7 +7,7 @@ export string_equals
 ; rax 開始アドレス
 native "find_word" find_word
     xor rax, rax
-    mov rsi, lw
+    mov rsi, last_word
 .loop:
     test rsi, rsi
     jz .end
@@ -28,3 +28,4 @@ native "find_word" find_word
 
 ; ワードヘッダの開始アドレスを受け取り、実行トークン（XT）の値に到達するまでヘッダ全体をスキップする。
 ; rdi ワードヘッダの開始アドレス
+native "cfa", cfa
