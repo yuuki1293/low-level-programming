@@ -14,8 +14,6 @@ input_buf: resb 1024
 section .text
 
 ; ヌルで終わる文字列へのポインタを受け取り、そのワードヘッダの開始アドレスを返す。もし、その名前のワードがなければ、ゼロを返す。
-; rdi 文字列
-; rax 開始アドレス
 native "find_word" find_word
     xor rax, rax
     mov rsi, last_word
@@ -38,7 +36,6 @@ native "find_word" find_word
     ret
 
 ; ワードヘッダの開始アドレスを受け取り、実行トークン（XT）の値に到達するまでヘッダ全体をスキップする。
-; rdi ワードヘッダの開始アドレス
 native "cfa", cfa
     pop rsi
     add rsi, 9
