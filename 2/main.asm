@@ -19,7 +19,7 @@ _start:
     mov rdi, rsp
     sub rsp, 256
     mov rsi, 255
-.loop
+.loop:
     push rsi
     call read_word
     mov rdi, rax
