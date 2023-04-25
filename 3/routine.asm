@@ -2,17 +2,6 @@ section .text
 
 export string_equals
 
-%define pc r15
-%define w r14
-%define rstack r13
-
-section .bss
-resq 1023
-rstack_start: resq 1
-input_buf: resb 1024
-
-section .text
-
 ; ヌルで終わる文字列へのポインタを受け取り、そのワードヘッダの開始アドレスを返す。もし、その名前のワードがなければ、ゼロを返す。
 native "find_word" find_word
     xor rax, rax
