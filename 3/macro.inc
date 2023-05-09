@@ -34,7 +34,7 @@ w_ %+ %2:
     dq w_ %+ last_word
     db %1, 0
     db %3
-xt_ %+ %2 : dq i_docol
+xt_ %+ %2 : dq docol_impl
 
 %define last_word w_ %+ %2
 %endmacro
