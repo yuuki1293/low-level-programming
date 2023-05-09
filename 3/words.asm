@@ -50,6 +50,11 @@ native "cfa", cfa
 
 colon "interpreter" interpreter
 
+; スタックの一番上を捨てる
+native "drop" drop
+    add rsp, 8
+    jmp next
+
 ; プログラムが実行されたときに最初に呼ばれるルーチン
 ; レジスタの初期化等を行う
 native "init", init
@@ -70,3 +75,4 @@ native "exit" exit
     mov pc, [rstack]
     add rstack, 8
     jmp next
+
