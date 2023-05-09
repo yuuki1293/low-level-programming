@@ -76,3 +76,14 @@ native "exit" exit
     add rstack, 8
     jmp next
 
+; 標準入力から文字列を読み取る。
+; args:
+;   1 - 文字列の保存先のアドレス
+; return:
+;   1 - 文字列の長さ
+native "word", word
+    mov rsi, 1024
+    pop rdi
+    call read_word
+    push rdx
+    jmp next
