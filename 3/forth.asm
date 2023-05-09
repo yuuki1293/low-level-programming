@@ -23,3 +23,5 @@ docol:
     add w, 8
     mov pc, w
     jmp next
+
+_start: jmp init_impl
