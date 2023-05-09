@@ -64,3 +64,9 @@ native "docol", docol
     add w, 8
     mov pc, w
     jmp next
+
+; 全てのコロンワードの終わり
+native "exit" exit
+    mov pc, [rstack]
+    add rstack, 8
+    jmp next
