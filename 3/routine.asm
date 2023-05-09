@@ -1,6 +1,7 @@
 section .text
 
 export string_equals
+export read_word
 
 section .text
 
