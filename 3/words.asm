@@ -50,6 +50,8 @@ native "cfa", cfa
 
 colon "interpreter" interpreter
 
+; プログラムが実行されたときに最初に呼ばれるルーチン
+; レジスタの初期化等を行う
 native "init", init
     mov rstack, rstack_start
     mov pc, program_stub
