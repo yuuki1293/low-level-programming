@@ -54,3 +54,10 @@ native "init", init
     mov rstack, rstack_start
     mov pc, program_stub
     jmp next
+
+native "docol", docol
+    sub rstack, 8
+    mov [rstack], pc
+    add w, 8
+    mov pc, w
+    jmp next

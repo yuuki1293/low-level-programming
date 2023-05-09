@@ -23,11 +23,4 @@ next:
     add pc, 8
     jmp [w]
 
-docol:
-    sub rstack, 8
-    mov [rstack], pc
-    add w, 8
-    mov pc, w
-    jmp next
-
 _start: jmp init_impl
