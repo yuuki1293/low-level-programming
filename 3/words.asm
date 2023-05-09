@@ -49,3 +49,8 @@ native "cfa", cfa
     jmp next
 
 colon "interpreter" interpreter
+
+native "init", init
+    mov rstack, rstack_start
+    mov pc, program_stub
+    jmp next
