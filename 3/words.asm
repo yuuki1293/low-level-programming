@@ -57,6 +57,7 @@ native "init", init
     mov pc, program_stub
     jmp next
 
+; 全てのコロンワードの開始
 native "docol", docol
     sub rstack, 8
     mov [rstack], pc
