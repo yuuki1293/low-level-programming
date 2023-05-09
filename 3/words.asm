@@ -3,6 +3,10 @@ section .text
 export string_equals
 export read_word
 
+section .rodata
+
+program_stub: dq xt_interpreter
+
 section .text
 
 ; ヌルで終わる文字列へのポインタを受け取り、そのワードヘッダの開始アドレスを返す。もし、その名前のワードがなければ、ゼロを返す。
@@ -43,3 +47,5 @@ native "cfa", cfa
     add rsi, 2
     push rsi
     jmp next
+
+colon "interpreter" interpreter

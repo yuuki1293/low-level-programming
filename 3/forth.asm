@@ -12,17 +12,6 @@ extern read_word
 
 global _start
 
-program_stub: dq 0
-xt_interpreter: dq .interpreter
-.interpreter: dq interpreter_loop
-
-interpreter_loop:
-    mov rdi, input_data
-    mov rsi, 1024
-    call read_word
-    test input_data, input_data
-    jz exit
-
 next:
     mov w, [pc]
     add pc, 8
