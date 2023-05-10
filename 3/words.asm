@@ -79,7 +79,7 @@ native "exit" exit
 ; 標準入力から文字列を読み取る。
 ; args:
 ;   1 - 文字列の保存先のアドレス
-; return:
+; returns:
 ;   1 - 文字列の長さ
 native "word", word
     ; mov rsi, 1024 ; TODO: なぜ文字列の長さを設定しなくても良いのか
@@ -97,7 +97,7 @@ native "prints" prints
     jmp next
 
 ; インプットバッファのアドレスをスタックに積む
-; return:
+; returns:
 ;   1 - インプットバッファのアドレス
 native "inbuf" inbuf
     push qword input_buf
