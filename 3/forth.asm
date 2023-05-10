@@ -8,6 +8,10 @@
 ; コロンワードを呼び出す時にpcを退避させるスタックのアドレス
 %define rstack r13
 
+section .rodata
+
+msg_no_such_word: db ": no_such_word"
+
 ; .bssに配置されたアドレスは0で初期化される
 section .bss
 
