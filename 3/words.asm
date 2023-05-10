@@ -57,8 +57,6 @@ native "cfa", cfa
     push rsi
     jmp next
 
-colon "interpreter" interpreter
-
 ; スタックの一番上を捨てる
 native "drop" drop
     add rsp, 8
@@ -137,3 +135,5 @@ native "0branch" branch0
 .skip
     add pc, 8
     jmp next
+
+colon "interpreter" interpreter

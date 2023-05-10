@@ -18,8 +18,6 @@ input_data: resb 1024
 
 section .text
 
-extern read_word
-
 global _start
 
 ; pcのワードを実行し、pcを進める
