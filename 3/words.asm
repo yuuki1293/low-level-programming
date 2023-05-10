@@ -98,3 +98,14 @@ native "branch" branch
     add pc, [pc]
     add pc, 8
     jmp next
+
+; スタックのトップが0の場合、次に配置されている数値だけpcを進める。
+; コンパイル時のみ
+native "0branch" branch0
+    pop rax
+    test rax, rax
+    jnz .skip
+    add pc, [pc]
+.skip
+    add pc, 8
+    jmp next
