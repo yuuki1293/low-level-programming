@@ -146,7 +146,7 @@ native "0branch", branch0
     test rax, rax
     jnz .skip
     add pc, [pc]
-.skip
+.skip:
     add pc, 8
     jmp next
 
