@@ -31,7 +31,7 @@ native %1, %2, 0
 %macro colon 3
 section .data
 w_ %+ %2:
-    dq w_ %+ last_word
+    dq last_word
     db %1, 0
     db %3
 xt_ %+ %2 : dq docol_impl
