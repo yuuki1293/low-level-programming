@@ -132,3 +132,6 @@ native "0branch" branch0
     jmp next
 
 colon "interpreter" interpreter
+.start
+    dq xt_inbuf, xt_word
+    
