@@ -193,8 +193,12 @@ read_word:
     ; rsi = dest
     ; rdx = dest length 
 
-; rdi points to a string
-; returns rax: number, rdx : length
+; 文字列から符号なし整数への構文解析をする
+; args:
+;   rdi 文字列へのポインタ
+; returns:
+;   rax 数値
+;   rdx 解析した文字列の長さ
 parse_uint:
     xor rax, rax
     xor rcx, rcx
@@ -215,8 +219,12 @@ parse_uint:
     mov rdx, rcx
     ret
 
-; rdi points to a string
-; returns rax: number, rdx : length
+; 文字列から符号付き整数への構文解析をする
+; args:
+;   rdi 文字列へのポインタ
+; returns:
+;   rax 数値
+;   rdx 解析した文字列の長さ
 parse_int:
     movzx r9, byte [rdi]
     cmp r9b, '-'
