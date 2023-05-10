@@ -1,5 +1,6 @@
 %include "lib.inc"
 %include "macro.inc"
+%include "words.asm"
 
 ; 次に実行するワードを指す(アドレスのアドレス)
 %define pc r15
