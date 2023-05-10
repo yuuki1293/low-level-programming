@@ -88,6 +88,14 @@ native "word", word
     push rdx
     jmp next
 
+; スタックのトップのアドレスの文字列をプリントする。
+; args:
+;   1 - 文字列のアドレス
+native "prints" prints
+    pop rdi
+    call print_string
+    jmp next
+
 native "inbuf" inbuf
     push qword input_buf
     jmp next
