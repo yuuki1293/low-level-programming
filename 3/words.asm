@@ -105,6 +105,12 @@ native "prints" prints
     call print_string
     jmp next
 
+; プログラムを終了させる
+native "bye" bye
+    mov rax, 60
+    xor rdi, rdi
+    syscall
+
 ; インプットバッファのアドレスをスタックに積む
 ; returns:
 ;   インプットバッファのアドレス
