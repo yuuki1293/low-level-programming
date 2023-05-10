@@ -112,6 +112,8 @@ native "branch" branch
 
 ; スタックのトップが0の場合、次に配置されている数値だけpcを進める。
 ; コンパイル時のみ
+; args:
+;   1 - 数値
 native "0branch" branch0
     pop rax
     test rax, rax
