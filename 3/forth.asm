@@ -1,3 +1,6 @@
+%include "lib.inc"
+%include "macro.inc"
+
 ; 次に実行するワードを指す(アドレスのアドレス)
 %define pc r15
 ; 現在実行中のワードを指す
