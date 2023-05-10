@@ -1,7 +1,11 @@
+; 次に実行するワードを指す(アドレスのアドレス)
 %define pc r15
+; 現在実行中のワードを指す
 %define w r14
+; コロンワードを呼び出す時にpcを退避させるスタックのアドレス
 %define rstack r13
 
+; .bssに配置されたアドレスは0で初期化される
 section .bss
 
 ; pcを退避させるためのrstackを確保
@@ -18,6 +22,7 @@ extern read_word
 
 global _start
 
+; pcのワードを実行し、pcを進める
 next:
     mov w, [pc]
     add pc, 8
