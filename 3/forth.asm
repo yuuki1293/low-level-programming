@@ -17,7 +17,7 @@ resq 1023
 rstack_start: resq 1
 
 ; 入力された文字列が格納される場所
-input_data: resb 1024
+input_buf: resb 1024
 
 section .text
 
