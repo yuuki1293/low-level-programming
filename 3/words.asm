@@ -9,7 +9,12 @@ program_stub: dq xt_interpreter
 
 section .text
 
-; ヌルで終わる文字列へのポインタを受け取り、そのワードヘッダの開始アドレスを返す。もし、その名前のワードがなければ、ゼロを返す。
+; ヌルで終わる文字列へのポインタを受け取り、そのワードヘッダの開始アドレスを返す。
+; もし、その名前のワードがなければ、ゼロを返す。
+; args:
+;   文字列へのポインタ
+; returns:
+;   ワードヘッダの開始アドレス
 native "find_word" find_word
     mov rsi, [last_word]
 .loop:
@@ -34,9 +39,9 @@ native "find_word" find_word
 
 ; ワードヘッダの開始アドレスを受け取り、実行トークン（XT）の値に到達するまでヘッダ全体をスキップする。
 ; args:
-;   1 - ワードヘッダの開始アドレス
+;   ワードヘッダの開始アドレス
 ; returns:
-;   1 - 実行トークンのアドレス
+;   実行トークンのアドレス
 native "cfa", cfa
     pop rsi
     add rsi, 9
@@ -82,9 +87,9 @@ native "exit" exit
 
 ; 標準入力から文字列を読み取る。
 ; args:
-;   1 - 文字列の保存先のアドレス
+;   文字列の保存先のアドレス
 ; returns:
-;   1 - 文字列の長さ
+;   文字列の長さ
 native "word", word
     ; mov rsi, 1024 ; TODO: なぜ文字列の長さを設定しなくても良いのか
     pop rdi
@@ -94,7 +99,7 @@ native "word", word
 
 ; スタックのトップのアドレスの文字列をプリントする。
 ; args:
-;   1 - 文字列のアドレス
+;   文字列のアドレス
 native "prints" prints
     pop rdi
     call print_string
@@ -102,7 +107,7 @@ native "prints" prints
 
 ; インプットバッファのアドレスをスタックに積む
 ; returns:
-;   1 - インプットバッファのアドレス
+;   インプットバッファのアドレス
 native "inbuf" inbuf
     push qword input_buf
     jmp next
@@ -117,7 +122,7 @@ native "branch" branch
 ; スタックのトップが0の場合、次に配置されている数値だけpcを進める。
 ; コンパイル時のみ
 ; args:
-;   1 - 数値
+;   数値
 native "0branch" branch0
     pop rax
     test rax, rax
