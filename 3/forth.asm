@@ -1,13 +1,12 @@
+%include "lib.inc"
+%include "macro.inc"
+
 ; 次に実行するワードを指す(アドレスのアドレス)
 %define pc r15
 ; 現在実行中のワードを指す
 %define w r14
 ; コロンワードを呼び出す時にpcを退避させるスタックのアドレス
 %define rstack r13
-
-%include "lib.inc"
-%include "macro.inc"
-%include "words.asm"
 
 ; .bssに配置されたアドレスは0で初期化される
 section .bss
@@ -29,5 +28,7 @@ next:
     mov w, [pc]
     add pc, 8
     jmp [w]
+
+%include "words.asm"
 
 _start: jmp init_impl
