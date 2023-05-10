@@ -93,6 +93,7 @@ native "inbuf" inbuf
     jmp next
 
 ; 次に配置されている数値だけpcを進める。
+; コンパイル時のみ
 native "branch" branch
     add pc, [pc]
     add pc, 8
