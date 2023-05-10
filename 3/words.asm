@@ -91,3 +91,9 @@ native "word", word
 native "inbuf" inbuf
     push qword input_buf
     jmp next
+
+; 次に配置されている数値だけpcを進める。
+native "branch" branch
+    add pc, [pc]
+    add pc, 8
+    jmp next
