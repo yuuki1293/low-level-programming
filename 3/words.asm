@@ -10,7 +10,7 @@ section .text
 ;   文字列へのポインタ
 ; returns:
 ;   ワードヘッダの開始アドレス
-native "find_word" find_word
+native "find_word", find_word
     mov rsi, [last_word]
 .loop:
     test rsi, rsi
@@ -53,7 +53,7 @@ native "cfa", cfa
     jmp next
 
 ; スタックの一番上を捨てる
-native "drop" drop
+native "drop", drop
     add rsp, 8
     jmp next
 
@@ -73,7 +73,7 @@ native "docol", docol
     jmp next
 
 ; 全てのコロンワードの終わり
-native "exit" exit
+native "exit", exit
     mov pc, [rstack]
     add rstack, 8
     jmp next
@@ -93,13 +93,13 @@ native "word", word
 ; スタックのトップのアドレスの文字列をプリントする。
 ; args:
 ;   文字列のアドレス
-native "prints" prints
+native "prints", prints
     pop rdi
     call print_string
     jmp next
 
 ; プログラムを終了させる
-native "bye" bye
+native "bye", bye
     mov rax, 60
     xor rdi, rdi
     syscall
@@ -107,7 +107,7 @@ native "bye" bye
 ; インプットバッファのアドレスをスタックに積む
 ; returns:
 ;   インプットバッファのアドレス
-native "inbuf" inbuf
+native "inbuf", inbuf
     push qword input_buf
     jmp next
 
@@ -117,7 +117,7 @@ native "inbuf" inbuf
 ; returns:
 ;   数値
 ;   変換された文字列の長さ
-native "number" number
+native "number", number
     pop rdi
     call parse_int
     push rax
@@ -125,14 +125,14 @@ native "number" number
     jmp next
 
 ; 次の命令の数値をスタックヘプッシュする
-native "lit" lit
+native "lit", lit
     push qword [pc]
     add pc, 8
     jmp next
 
 ; 次に配置されている数値だけpcを進める。
 ; コンパイル時のみ
-native "branch" branch
+native "branch", branch
     add pc, [pc]
     add pc, 8
     jmp next
@@ -141,7 +141,7 @@ native "branch" branch
 ; コンパイル時のみ
 ; args:
 ;   数値
-native "0branch" branch0
+native "0branch", branch0
     pop rax
     test rax, rax
     jnz .skip
@@ -150,7 +150,7 @@ native "0branch" branch0
     add pc, 8
     jmp next
 
-colon "interpreter" interpreter
+colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
     branch0 .exit ; 文字列が空の場合.exitにジャンプ
