@@ -231,8 +231,13 @@ parse_int:
     jne parse_uint
     inc rdi
     call parse_uint
+    test rdx, rdx
+    jz .error
     neg rax
     inc rdx
+    ret
+.error:
+    xor rdx, rdx
     ret
 
 ; rdi 文字列へのポインタ
