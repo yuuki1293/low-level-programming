@@ -33,6 +33,10 @@ native "find_word" find_word
     jmp next
 
 ; ワードヘッダの開始アドレスを受け取り、実行トークン（XT）の値に到達するまでヘッダ全体をスキップする。
+; args:
+;   1 - ワードヘッダの開始アドレス
+; returns:
+;   1 - 実行トークンのアドレス
 native "cfa", cfa
     pop rsi
     add rsi, 9
