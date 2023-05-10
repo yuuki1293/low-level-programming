@@ -96,6 +96,9 @@ native "prints" prints
     call print_string
     jmp next
 
+; インプットバッファのアドレスをスタックに積む
+; return:
+;   1 - インプットバッファのアドレス
 native "inbuf" inbuf
     push qword input_buf
     jmp next
