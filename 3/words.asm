@@ -111,6 +111,19 @@ native "inbuf" inbuf
     push qword input_buf
     jmp next
 
+; スタックのトップのアドレスの文字列を符号付き整数へ変換する。
+; args:
+;   文字列のアドレス
+; returns:
+;   数値
+;   変換された文字列の長さ
+native "number" number
+    pop rdi
+    call parse_int
+    push rax
+    push rdx
+    jmp next
+
 ; 次に配置されている数値だけpcを進める。
 ; コンパイル時のみ
 native "branch" branch
@@ -132,6 +145,16 @@ native "0branch" branch0
     jmp next
 
 colon "interpreter" interpreter
-.start
-    dq xt_inbuf, xt_word
-    
+.start:
+    dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
+    branch0 .exit ; 文字列が空の場合.exitにジャンプ
+
+    dq xt_drop ; 文字列の長さを捨てる
+    dq xt_inbuf, xt_find_word ; 文字列のワードヘッダを探す
+    branch0 .num ; 文字列のワードヘッダがない場合.numにジャンプ
+.num:
+    dq xt_drop ; 0を捨てる
+    dq 
+.exit:
+    dq xt_bye
+    dq xt_exit
