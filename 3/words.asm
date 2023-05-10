@@ -124,6 +124,12 @@ native "number" number
     push rdx
     jmp next
 
+; 次の命令の数値をスタックヘプッシュする
+native "lit" lit
+    push qword [pc]
+    add pc, 8
+    jmp next
+
 ; 次に配置されている数値だけpcを進める。
 ; コンパイル時のみ
 native "branch" branch
@@ -154,7 +160,10 @@ colon "interpreter" interpreter
     branch0 .num ; 文字列のワードヘッダがない場合.numにジャンプ
 .num:
     dq xt_drop ; 0を捨てる
-    dq 
+    dq xt_inbuf, xt_number ; 数値への変換を試みる
+    branch0 .not_found ; 数値への変換が失敗した場合.not_foundにジャンプ
+.not_found:
+    dq
 .exit:
     dq xt_bye
     dq xt_exit
