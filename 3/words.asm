@@ -133,7 +133,7 @@ native "lit", lit
 ; スタックのトップのトークンを実行する
 ; args:
 ;   xtのアドレス
-native "execute" execute
+native "execute", execute
     pop rax
     mov w, rax
     jmp [rax]
