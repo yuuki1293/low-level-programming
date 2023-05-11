@@ -130,6 +130,14 @@ native "lit", lit
     add pc, 8
     jmp next
 
+; スタックのトップのトークンを実行する
+; args:
+;   xtのアドレス
+native "execute" execute
+    pop rax
+    mov w, rax
+    jmp [rax]
+
 ; 次に配置されている数値だけpcを進める。
 ; コンパイル時のみ
 native "branch", branch
@@ -158,12 +166,21 @@ colon "interpreter", interpreter
     dq xt_drop ; 文字列の長さを捨てる
     dq xt_inbuf, xt_find_word ; 文字列のワードヘッダを探す
     branch0 .num ; 文字列のワードヘッダがない場合.numにジャンプ
+
+    dq xt_cfa
+    dq xt_execute
+    branch .start
 .num:
     dq xt_drop ; 0を捨てる
     dq xt_inbuf, xt_number ; 数値への変換を試みる
     branch0 .not_found ; 数値への変換が失敗した場合.not_foundにジャンプ
+
+    dq xt_drop
+    branch .start
 .not_found:
-    dq
+    dq xt_drop, xt_drop
+    dq xt_lit, msg_no_such_word, prints ; エラーメッセージを出力
+    branch .start
 .exit:
     dq xt_bye
     dq xt_exit
