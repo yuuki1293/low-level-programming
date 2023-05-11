@@ -23,6 +23,8 @@ rstack_start: resq 1
 ; 入力された文字列が格納される場所
 input_buf: resb 1024
 
+%include "words.asm"
+
 section .text
 
 global _start
@@ -32,7 +34,5 @@ next:
     mov w, [pc]
     add pc, 8
     jmp [w]
-
-%include "words.asm"
 
 _start: jmp init_impl
