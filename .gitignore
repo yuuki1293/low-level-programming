@@ -5,6 +5,7 @@
 
 *.o
 *.so
+*.swp
 
 print_string* 
 string_copy* 
