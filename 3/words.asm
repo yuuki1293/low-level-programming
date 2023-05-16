@@ -21,7 +21,7 @@ native "find_word", find_word
     call string_equals
     pop rsi
     test rax, rax
-    jz .found
+    jnz .found
     mov rsi, [rsi]
     jmp .loop
 .not_found:
