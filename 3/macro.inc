@@ -1,6 +1,6 @@
 %define head_size 10
 
-%define last_word 0
+%define _lw 0
 
 ; %1 ワードの名前
 ; %2 ワード識別子の一部
@@ -8,7 +8,7 @@
 %macro native 3
 section .data
 w_ %+ %2:
-    dq last_word
+    dq _lw
     db %1, 0
     db %3
 xt_ %+ %2:
@@ -16,7 +16,7 @@ xt_ %+ %2:
 section .text
 %2 %+ _impl:
 
-%define last_word w_ %+ %2
+%define _lw w_ %+ %2
 %endmacro
 
 ; %1 ワードの名前
@@ -31,12 +31,12 @@ native %1, %2, 0
 %macro colon 3
 section .data
 w_ %+ %2:
-    dq last_word
+    dq _lw
     db %1, 0
     db %3
 xt_ %+ %2 : dq docol_impl
 
-%define last_word w_ %+ %2
+%define _lw w_ %+ %2
 %endmacro
 
 %macro colon 2

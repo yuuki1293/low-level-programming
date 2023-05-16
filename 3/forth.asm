@@ -25,6 +25,11 @@ input_buf: resb 1024
 
 %include "words.asm"
 
+section .data
+
+; ワードリストの最後のアドレスが入る
+last_word: dq _lw
+
 section .text
 
 global _start
