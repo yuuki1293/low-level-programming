@@ -170,6 +170,13 @@ native "dup", dup
     push rax
     jmp next
 
+; Forthマシンのメモリの開始アドレスをスタックに積む
+; returns:
+;   Forthマシンのメモリの開始アドレス
+native "mem", mem
+    push forth_mem
+    jmp next
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
