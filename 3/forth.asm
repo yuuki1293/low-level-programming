@@ -10,7 +10,7 @@
 
 section .rodata
 
-msg_no_such_word: db ": no_such_word"
+msg_no_such_word: db ": no_such_word", 10, 0
 
 ; .bssに配置されたアドレスは0で初期化される
 section .bss
