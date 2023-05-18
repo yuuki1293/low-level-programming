@@ -187,8 +187,7 @@ colon "interpreter", interpreter
     dq xt_drop ; 0を捨てる
     dq xt_inbuf, xt_number ; 数値への変換を試みる
     branch0 .not_found ; 数値への変換が失敗した場合.not_foundにジャンプ
-
-    dq xt_drop
+    
     branch .start
 .not_found:
     dq xt_drop, xt_drop
