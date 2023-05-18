@@ -17,7 +17,7 @@ native "find_word", find_word
     jz .not_found
     mov rdi, [rsp]
     push rsi
-    add rsi, 9 ; TODO: 8ではなく9
+    add rsi, 8
     call string_equals
     pop rsi
     test rax, rax
