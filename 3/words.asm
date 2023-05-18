@@ -158,6 +158,18 @@ native "0branch", branch0
     add pc, 8
     jmp next
 
+; スタックの一番上を複製する
+; args:
+;   any
+; returns:
+;   any
+;   any
+native "dup", dup
+    pop rax
+    push rax
+    push rax
+    jmp next
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
@@ -165,6 +177,7 @@ colon "interpreter", interpreter
 
     dq xt_drop ; 文字列の長さを捨てる
     dq xt_inbuf, xt_find_word ; 文字列のワードヘッダを探す
+    dq xt_dup
     branch0 .num ; 文字列のワードヘッダがない場合.numにジャンプ
 
     dq xt_cfa
