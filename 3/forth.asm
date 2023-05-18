@@ -23,6 +23,9 @@ rstack_start: resq 1
 ; 入力された文字列が格納される場所
 input_buf: resb 1024
 
+; Forthマシンのメモリ
+forth_mem: resq 65536
+
 %include "words.asm"
 
 section .data
