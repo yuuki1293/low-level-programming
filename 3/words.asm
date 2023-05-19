@@ -62,6 +62,7 @@ native "drop", drop
 native "init", init
     mov rstack, rstack_start
     mov pc, program_stub
+    mov stack_base, rsp
     jmp next
 
 ; 全てのコロンワードの開始
@@ -176,6 +177,11 @@ native "dup", dup
 native "mem", mem
     push forth_mem
     jmp next
+
+native ".S", show_stack
+    mov rcx, rsp
+.loop:
+    mov rdi, [rsp]
 
 colon "interpreter", interpreter
 .start:

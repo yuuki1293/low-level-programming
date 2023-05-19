@@ -33,6 +33,9 @@ section .data
 ; ワードリストの最後のアドレスが入る
 last_word: dq _lw
 
+; スタックの一番下のアドレスが入る
+stack_base: dq 0
+
 section .text
 
 global _start
