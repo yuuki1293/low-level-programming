@@ -173,17 +173,25 @@ native ".S", show_stack
     jmp .loop
 
 ; スタックの1番目と2番目を足す
-; (nu1 nu2 -- sum)
+; ( nu1 nu2 -- sum )
 native "+", plus
     pop rax
     add [rsp], rax
     jmp next
 
 ; スタックの1番目から2番目を引く
-; (nu1 nu2 -- sub)
+; ( nu1 nu2 -- sub )
 native "-", minus
     pop rax
     sub [rsp], rax
+    jmp next
+
+; スタックの1番目に2番目を掛ける
+; ( nu1 nu2 -- mul )
+native "*", mul
+    pop rax
+    imul qword [rsp]
+    mov [rsp], rax
     jmp next
 
 colon "interpreter", interpreter
