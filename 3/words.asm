@@ -192,6 +192,11 @@ native ".S", show_stack
     add rcx, 8
     jmp .loop
 
+native "+", plus
+    pop rax
+    add [rsp], rax
+    jmp next
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
