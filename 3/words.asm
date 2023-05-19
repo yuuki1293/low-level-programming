@@ -178,17 +178,26 @@ native "mem", mem
     push forth_mem
     jmp next
 
+; スタックの数を全てプリントする
 native ".S", show_stack
     mov rcx, rsp
 .loop:
-    cmp [stack_base], rcx
+    cmp rcx, [stack_base]
+    jge .end
+    mov rdi, [rcx]
+    push rcx
+    call print_int
+    pop rcx
+    add rcx, 8
+.end:
+    mov rsp, rcx
+    jmp next
 
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
     branch0 .exit ; 文字列が空の場合.exitにジャンプ
 
-    dq xt_drop ; 文字列の長さを捨てる
     dq xt_inbuf, xt_find_word ; 文字列のワードヘッダを探す
     dq xt_dup
     branch0 .num ; 文字列のワードヘッダがない場合.numにジャンプ
@@ -197,7 +206,8 @@ colon "interpreter", interpreter
     dq xt_execute
     branch .start
 .num:
-    dq xt_drop ; 0を捨てる
+    dq xt_drop ; 0を捨てる*2
+    dq xt_drop
     dq xt_inbuf, xt_number ; 数値への変換を試みる
     branch0 .not_found ; 数値への変換が失敗した場合.not_foundにジャンプ
     
