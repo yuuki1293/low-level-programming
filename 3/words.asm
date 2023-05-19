@@ -204,6 +204,19 @@ native "/", div
     push rax
     jmp next
 
+; スタックの1番目と2番目が等しいか比較する
+; ( nu1 nu2 -- [ nu2 = nu1 ] )
+native "=", eq
+    pop rax
+    pop rcx
+    cmp rax, rcx
+    je .e
+    push 0
+    jmp next
+.e:
+    push 1
+    jmp next
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
