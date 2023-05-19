@@ -193,14 +193,17 @@ native ".S", show_stack
     jmp .loop
 
 ; スタックの1番目と2番目を足す
-; args:
-;   num1
-;   num2
-; returns:
-;   num2 + num1
+; (nu1 nu2 -- sum)
 native "+", plus
     pop rax
     add [rsp], rax
+    jmp next
+
+; スタックの2番目から1番目を引く
+; (nu1 nu2 -- sub)
+native "-", minus
+    pop rax
+    sub [rsp], rax
     jmp next
 
 colon "interpreter", interpreter
