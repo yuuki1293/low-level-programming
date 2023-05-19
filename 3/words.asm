@@ -173,21 +173,21 @@ native ".S", show_stack
     jmp .loop
 
 ; スタックの1番目と2番目を足す
-; ( nu1 nu2 -- [ nu2 + nu1 ] )
+; ( nu2 nu1 -- [ nu1 + nu2 ] )
 native "+", plus
     pop rax
     add [rsp], rax
     jmp next
 
 ; スタックの1番目から2番目を引く
-; ( nu1 nu2 -- [ nu2 - nu1 ] )
+; ( nu2 nu1 -- [ nu1 - nu2 ] )
 native "-", minus
     pop rax
     sub [rsp], rax
     jmp next
 
 ; スタックの1番目に2番目を掛ける
-; ( nu1 nu2 -- [ nu2 * nu1 ] )
+; ( nu2 nu1 -- [ nu1 * nu2 ] )
 native "*", mul
     pop rax
     imul qword [rsp]
@@ -195,7 +195,7 @@ native "*", mul
     jmp next
 
 ; スタックの1番目を2番目で割る
-; ( nu1 nu2 -- [ nu2 / nu1 ] )
+; ( nu2 nu1 -- [ nu1 / nu2 ] )
 native "/", div
     pop rcx
     pop rax
@@ -205,7 +205,7 @@ native "/", div
     jmp next
 
 ; スタックの1番目と2番目が等しいか比較する
-; ( nu1 nu2 -- [ nu2 = nu1 ] )
+; ( nu2 nu1 -- [ nu1 = nu2 ] )
 native "=", eq
     pop rax
     pop rcx
