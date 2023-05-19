@@ -6,10 +6,7 @@ section .text
 
 ; ヌルで終わる文字列へのポインタを受け取り、そのワードヘッダの開始アドレスを返す。
 ; もし、その名前のワードがなければ、ゼロを返す。
-; args:
-;   文字列へのポインタ
-; returns:
-;   ワードヘッダの開始アドレス
+; ( str -- addr)
 native "find_word", find_word
     mov rsi, [last_word]
 .loop:
@@ -33,10 +30,7 @@ native "find_word", find_word
     jmp next
 
 ; ワードヘッダの開始アドレスを受け取り、実行トークン（XT）の値に到達するまでヘッダ全体をスキップする。
-; args:
-;   ワードヘッダの開始アドレス
-; returns:
-;   実行トークンのアドレス
+; ( addr -- addr )
 native "cfa", cfa
     pop rsi
     add rsi, 9
@@ -53,6 +47,7 @@ native "cfa", cfa
     jmp next
 
 ; スタックの一番上を捨てる
+; ( a -- )
 native "drop", drop
     add rsp, 8
     jmp next
@@ -80,10 +75,7 @@ native "exit", exit
     jmp next
 
 ; 標準入力から文字列を読み取る。
-; args:
-;   文字列の保存先のアドレス
-; returns:
-;   文字列の長さ
+; ( addr -- length )
 native "word", word
     ; mov rsi, 1024 ; TODO: なぜ文字列の長さを設定しなくても良いのか
     pop rdi
@@ -92,8 +84,7 @@ native "word", word
     jmp next
 
 ; スタックのトップのアドレスの文字列をプリントする。
-; args:
-;   文字列のアドレス
+; ( str -- )
 native "prints", prints
     pop rdi
     call print_string
@@ -106,18 +97,13 @@ native "bye", bye
     syscall
 
 ; インプットバッファのアドレスをスタックに積む
-; returns:
-;   インプットバッファのアドレス
+; ( -- addr )
 native "inbuf", inbuf
     push qword input_buf
     jmp next
 
 ; スタックのトップのアドレスの文字列を符号付き整数へ変換する。
-; args:
-;   文字列のアドレス
-; returns:
-;   数値
-;   変換された文字列の長さ
+; ( str -- unum length)
 native "number", number
     pop rdi
     call parse_int
@@ -126,14 +112,14 @@ native "number", number
     jmp next
 
 ; 次の命令の数値をスタックヘプッシュする
+; ( -- a )
 native "lit", lit
     push qword [pc]
     add pc, 8
     jmp next
 
 ; スタックのトップのトークンを実行する
-; args:
-;   xtのアドレス
+; ( addr -- )
 native "execute", execute
     pop rax
     mov w, rax
@@ -148,8 +134,7 @@ native "branch", branch
 
 ; スタックのトップが0の場合、次に配置されている数値だけpcを進める。
 ; コンパイル時のみ
-; args:
-;   数値
+; ( a -- )
 native "0branch", branch0
     pop rax
     test rax, rax
@@ -160,11 +145,7 @@ native "0branch", branch0
     jmp next
 
 ; スタックの一番上を複製する
-; args:
-;   any
-; returns:
-;   any
-;   any
+; ( a -- a a )
 native "dup", dup
     pop rax
     push rax
@@ -172,8 +153,7 @@ native "dup", dup
     jmp next
 
 ; Forthマシンのメモリの開始アドレスをスタックに積む
-; returns:
-;   Forthマシンのメモリの開始アドレス
+; ( -- addr )
 native "mem", mem
     push forth_mem
     jmp next
@@ -199,7 +179,7 @@ native "+", plus
     add [rsp], rax
     jmp next
 
-; スタックの2番目から1番目を引く
+; スタックの1番目から2番目を引く
 ; (nu1 nu2 -- sub)
 native "-", minus
     pop rax
