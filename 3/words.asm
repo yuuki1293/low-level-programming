@@ -230,6 +230,19 @@ native "<", less
     push 1
     jmp next
 
+; スタックの1番目と2番目の論理積を取る
+; ( x2 x1 -- [ x1 & x2 ] )
+native "and", and
+    pop rcx
+    pop rax
+    test rcx, rcx
+    setnz cl
+    test rax, rax
+    setnz al
+    and al, cl
+    movzx rax, al
+    push rax
+    jmp next
 
 colon "interpreter", interpreter
 .start:
