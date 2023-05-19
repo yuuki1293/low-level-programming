@@ -217,6 +217,20 @@ native "=", eq
     push 1
     jmp next
 
+; スタックの1番目が2番目より小さいか調べる
+; ( nu2 nu1 -- [ nu1 < nu2 ] )
+native "<", less
+    pop rcx
+    pop rax
+    cmp rax, rcx
+    jl .l
+    push 0
+    jmp next
+.l:
+    push 1
+    jmp next
+
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
