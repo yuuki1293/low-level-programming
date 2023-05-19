@@ -192,6 +192,12 @@ native ".S", show_stack
     add rcx, 8
     jmp .loop
 
+; スタックの1番目と2番目を足す
+; args:
+;   num1
+;   num2
+; returns:
+;   num2 + num1
 native "+", plus
     pop rax
     add [rsp], rax
