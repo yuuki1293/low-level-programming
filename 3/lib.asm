@@ -57,11 +57,8 @@ print_char:
     ret
 
 print_newline:
-    mov rax, 1
-    mov rdi, 1
-    mov rsi, 10
-    mov rdx, 1
-    syscall
+    mov rdi, 10
+    call print_char
     ret
 
 ; rdi 8バイト長符号なし整数
