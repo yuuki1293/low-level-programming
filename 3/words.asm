@@ -183,15 +183,14 @@ native ".S", show_stack
     mov rcx, rsp
 .loop:
     cmp rcx, [stack_base]
-    jge .end
+    jae next
     mov rdi, [rcx]
     push rcx
     call print_int
+    call print_newline
     pop rcx
     add rcx, 8
-.end:
-    mov rsp, rcx
-    jmp next
+    jmp .loop
 
 colon "interpreter", interpreter
 .start:
