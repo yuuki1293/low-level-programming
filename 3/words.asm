@@ -226,7 +226,7 @@ colon "interpreter", interpreter
     
     branch .start
 .not_found:
-    dq xt_drop, xt_drop
+    dq xt_drop
     dq xt_lit, msg_no_such_word, xt_prints ; エラーメッセージを出力
     branch .start
 .exit:
