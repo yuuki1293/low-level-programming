@@ -147,13 +147,13 @@ native "exit", exit
 ; ( x -- )
 native ">r", push_r
     add rstack, 8
-    pop [rstack]
+    pop qword [rstack]
     jmp next
 
 ; リターンスタックからデータスタックにポップ
 ; ( -- x )
 native "<r", pop_r
-    push [rstack]
+    push qword [rstack]
     sub rstack, 8
     jmp next
 
