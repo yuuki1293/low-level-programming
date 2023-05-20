@@ -314,6 +314,14 @@ native "!", write
     mov [rcx], rax
     jmp next
 
+; スタックの1番目のbyteを2番目のメモリに格納する
+; ( addr c -- )
+native "c!", write_c
+    pop rax
+    pop rcx
+    movzx [rcx], eax
+    jmp next
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
