@@ -158,6 +158,7 @@ native "<r", pop_r
     jmp next
 
 ; リターンスタックのトップからデータスタックのトップへの、非破壊的なコピー
+; ( -- x )
 native "r@", fetch_r
     push qword [rstack]
     jmp next
