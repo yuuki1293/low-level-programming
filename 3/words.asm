@@ -157,7 +157,10 @@ native "<r", pop_r
     sub rstack, 8
     jmp next
 
-; TODO: r@
+; リターンスタックのトップからデータスタックのトップへの、非破壊的なコピー
+native "r@", fetch_r
+    push qword [rstack]
+    jmp next
 
 ; ヌルで終わる文字列へのポインタを受け取り、そのワードヘッダの開始アドレスを返す。
 ; もし、その名前のワードがなければ、ゼロを返す。
