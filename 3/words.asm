@@ -337,6 +337,16 @@ native "c@", fetch_c
     push rax
     jmp next
 
+; スタックの1番目と2番目の論理和を取る
+; ( x2 x1 -- [ x1 | x2 ] )
+colon "or", or
+    dq xt_not
+    dq xt_swap
+    dq xt_not
+    dq xt_and
+    dq xt_not
+    dq xt_exit
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
