@@ -349,11 +349,18 @@ native "@c", fetch_c
 ; ( x -- )
 native ",", comma
     mov rcx, [here]
-    pop [rcx]
-    add [here], 8
+    pop qword [rcx]
+    add qword [here], 8
     jmp next
 
-; TODO: c,
+; 定義中のワードに1バイトを追加
+; ( c -- )
+native "c,", comma_c
+    mov rcx, [here]
+    pop rax
+    mov [here], al
+    add qword [here], 1
+    jmp next
 
 ; 辞書に新しい名前を持つエントリを作成する。
 ; ( flags name -- )
