@@ -155,7 +155,7 @@ native "dup", dup
 ; Forthマシンのメモリの開始アドレスをスタックに積む
 ; ( -- addr )
 native "mem", mem
-    push forth_mem
+    push user_mem
     jmp next
 
 ; スタックの数を全てプリントする
