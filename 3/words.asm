@@ -104,7 +104,7 @@ native "inbuf", inbuf
 
 ; スタックのトップのアドレスの文字列を符号付き整数へ変換する。
 ; ( str -- unum length)
-native "number", number
+native "parse_number", parse_number
     pop rdi
     call parse_int
     push rax
@@ -310,7 +310,7 @@ colon "interpreter", interpreter
 .num:
     dq xt_drop ; 0を捨てる*2
     dq xt_drop
-    dq xt_inbuf, xt_number ; 数値への変換を試みる
+    dq xt_inbuf, xt_parse_number ; 数値への変換を試みる
     branch0 .not_found ; 数値への変換が失敗した場合.not_foundにジャンプ
     
     branch .start
