@@ -394,7 +394,11 @@ colon ":", colon
     dq xt_state, xt_lit, 1, xt_write
     dq xt_exit
 
-; TODO: ;
+; 現在のワード定義を終了する
+colon ";", semicolon, 1
+    dq xt_lit, xt_exit, xt_comma
+    dq state, xt_lit, 0, xt_write
+    dq xt_exit
 
 colon "interpreter", interpreter
 .start:
