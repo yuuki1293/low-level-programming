@@ -264,6 +264,14 @@ native "rot", rot
     push rdx
     jmp next
 
+; ( x2 x1 -- x1 x2 )
+native "swap", swap
+    pop rax
+    pop rcx
+    push rax
+    push rcx
+    jmp next
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
