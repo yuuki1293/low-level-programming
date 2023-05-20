@@ -219,7 +219,7 @@ native "=", eq
 
 ; スタックの1番目が2番目より小さいか調べる
 ; ( nu2 nu1 -- [ nu1 < nu2 ] )
-native "<", less
+native "<", lesser
     pop rcx
     pop rax
     cmp rax, rcx
