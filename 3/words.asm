@@ -91,7 +91,13 @@ native "=", eq
     push 1
     jmp next
 
-; TODO: count
+; nullで終わる文字列を受け取り、その長さを返す
+; ( str -- len )
+native "count", count
+    pop rdi
+    call string_length
+    push rax
+    jmp next
 
 ; 数をスタックからポップして出力する
 ; ( nu -- )
@@ -326,9 +332,6 @@ native "create", create
     mov [rsi], rax
 
     jmp next
-
-
-
 
 ; TODO: :
 
