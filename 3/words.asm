@@ -244,6 +244,16 @@ native "and", and
     push rax
     jmp next
 
+; スタックの1番目の論理否定を取る
+; ( x -- !x )
+native "not", not
+    pop rax
+    test rax, rax
+    setz al
+    movzx rax, al
+    push rax
+    jmp next
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
