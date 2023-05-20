@@ -368,6 +368,7 @@ native "create", create
     mov rax, [last_word]
     mov rsi, [here]
     mov [rsi], rax
+    mov [last_word], rsi
     add rsi, 8
 
     pop rdi
@@ -384,7 +385,13 @@ native "create", create
 
     jmp next
 
-; TODO: :
+colon ":", colon
+    dq xt_inbuf, xt_word, xt_drop
+    dq xt_lit, 0, xt_inbuf
+    dq xt_create
+    dq xt_lit, xt_docol, xt_comma
+    dq xt_state, xt_lit, 1, xt_write
+    dq xt_exit
 
 ; TODO: ;
 
