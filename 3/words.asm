@@ -288,7 +288,7 @@ native "lit", lit
 ; インプットバッファのアドレスをスタックに積む
 ; ( -- addr )
 native "inbuf", inbuf
-    push qword input_buf
+    push input_buf
     jmp next
 
 ; Forthマシンのメモリの開始アドレスをスタックに積む
@@ -300,19 +300,19 @@ native "mem", mem
 ; 最後のワードのアドレスをスタックにプッシュする
 ; ( -- addr )
 native "last_word", last_word
-    push qword [last_word]
+    push last_word
     jmp next
 
 ; モードを示すstateセルのアドレスをスタックにプッシュする
 ; ( -- addr )
 native "state", state
-    push qword [state]
+    push state
     jmp next
 
 ; 現在定義中のワードの最後のセルを指すポインタをスタックにプッシュする
 ; ( -- addr )
 native "here", here
-    push qword [here]
+    push here
     jmp next
 
 ; スタックのトップのトークンを実行する
