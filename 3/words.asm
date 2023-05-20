@@ -347,6 +347,13 @@ colon "or", or
     dq xt_not
     dq xt_exit
 
+; スタックの1番目が2番目より大きいか調べる
+; ( nu2 nu1 -- [ nu1 > nu2 ] )
+colon ">", greater
+    dq xt_swap
+    dq xt_lesser
+    dq xt_exit
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
