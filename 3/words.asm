@@ -104,7 +104,7 @@ native "inbuf", inbuf
 
 ; スタックのトップのアドレスの文字列を符号付き整数へ変換する。
 ; ( str -- unum length)
-native "parse_number", parse_number
+native "parse_nu", parse_nu
     pop rdi
     call parse_int
     push rax
@@ -295,6 +295,17 @@ native "emit", emit
     call print_newline
     jmp next
 
+; stdinから符号付き整数を読む
+; ( -- nu )
+colon "number", number
+    dq xt_inbuf
+    dq xt_word
+    dq xt_drop
+    dq xt_inbuf
+    dq xt_parse_nu
+    dq xt_drop
+    dq xt_exit
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
@@ -310,7 +321,7 @@ colon "interpreter", interpreter
 .num:
     dq xt_drop ; 0を捨てる*2
     dq xt_drop
-    dq xt_inbuf, xt_parse_number ; 数値への変換を試みる
+    dq xt_inbuf, xt_parse_nu; 数値への変換を試みる
     branch0 .not_found ; 数値への変換が失敗した場合.not_foundにジャンプ
     
     branch .start
