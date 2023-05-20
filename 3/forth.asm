@@ -26,6 +26,7 @@ section .data
 
 last_word: dq _lw   ; ワードリストの最後のアドレスが入る
 stack_base: dq 0    ; スタックの一番下のアドレスが入る
+state: db 0         ; 0:インタープリターモード, 1:コンパイラモード
 
 section .text
 
