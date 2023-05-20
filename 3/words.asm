@@ -272,6 +272,14 @@ native "swap", swap
     push rcx
     jmp next
 
+; 数をスタックからポップして出力する
+; ( nu -- )
+native ".", dot
+    pop rdi
+    call print_int
+    call print_newline
+    jmp next
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
