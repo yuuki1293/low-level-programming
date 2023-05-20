@@ -309,7 +309,11 @@ native "state", state
     push qword [state]
     jmp next
 
-; TODO: here
+; 現在定義中のワードの最後のセルを指すポインタをスタックにプッシュする
+; ( -- addr )
+native "here", here
+    push qword [here]
+    jmp next
 
 ; スタックのトップのトークンを実行する
 ; ( addr -- )
@@ -341,7 +345,13 @@ native "@c", fetch_c
     push rax
     jmp next
 
-; TODO: ,
+; 定義中のワードにxを追加
+; ( x -- )
+native ",", comma
+    mov rcx, [here]
+    pop [rcx]
+    add [here], 8
+    jmp next
 
 ; TODO: c,
 
