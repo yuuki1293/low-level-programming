@@ -26,6 +26,9 @@ input_buf: resb 1024
 ; Forthマシンのユーザーメモリ
 user_mem: resq 65536
 
+; 追加の辞書のメモリ
+dict_mem: resq 65536
+
 %include "words.asm"
 
 section .data
