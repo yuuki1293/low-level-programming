@@ -385,6 +385,7 @@ native "create", create
 
     jmp next
 
+; stdiinからワードを読み、その定義を開始する
 colon ":", colon
     dq xt_inbuf, xt_word, xt_drop
     dq xt_lit, 0, xt_inbuf
