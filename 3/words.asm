@@ -329,6 +329,12 @@ native "@", fetch
     push qword[rax]
     jmp next
 
+native "c@", fetch_c
+    pop rax
+    movzx rax, byte[rax]
+    push rax
+    jmp next
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
