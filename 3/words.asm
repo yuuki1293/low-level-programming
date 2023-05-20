@@ -297,7 +297,11 @@ native "mem", mem
     push user_mem
     jmp next
 
-; TODO: last_word
+; 最後のワードのアドレスをスタックにプッシュする
+; ( -- addr )
+native "last_word", last_word
+    push qword [last_word]
+    jmp next
 
 ; TODO: state
 
