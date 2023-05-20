@@ -146,9 +146,8 @@ native "exit", exit
 ; リターンスタックにデータスタックからプッシュ
 ; ( x -- )
 native ">r", push_r
-    pop rax
     add rstack, 8
-    mov [rstack], rax
+    pop [rstack]
     jmp next
 
 ; リターンスタックからデータスタックにポップ
