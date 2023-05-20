@@ -280,6 +280,13 @@ native ".", dot
     call print_newline
     jmp next
 
+; stdinから1文字を読む
+; ( -- char )
+native "key", key
+    call read_char
+    push rax
+    jmp next
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
