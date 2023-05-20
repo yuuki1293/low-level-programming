@@ -319,7 +319,7 @@ native "!", write
 native "c!", write_c
     pop rax
     pop rcx
-    movzx [rcx], al
+    mov [rcx], al
     jmp next
 
 ; addrから始まる1個のセルを読む
