@@ -217,7 +217,7 @@ native "emit", emit
 ; ワードの長さをスタックにプッシュする
 ; ( addr -- length )
 native "word", word
-    ; mov rsi, 1024 ; TODO: なぜ文字列の長さを設定しなくても良いのか
+    mov rsi, 1024
     pop rdi
     call read_word
     push rdx
