@@ -254,6 +254,16 @@ native "not", not
     push rax
     jmp next
 
+; ( x3 x2 x1 -- x2 x1 x3 )
+native "rot", rot
+    pop rax
+    pop rcx
+    pop rdx
+    push rcx
+    push rax
+    push rdx
+    jmp next
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
