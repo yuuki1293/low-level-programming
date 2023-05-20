@@ -1,18 +1,14 @@
 %include "lib.inc"
 %include "macro.inc"
 
-; 次に実行するワードを指す(アドレスのアドレス)
-%define pc r15
-; 現在実行中のワードを指す
-%define w r14
-; コロンワードを呼び出す時にpcを退避させるスタックのアドレス
-%define rstack r13
+%define pc r15      ; 次に実行するワードを指す(アドレスのアドレス)
+%define w r14       ; 現在実行中のワードを指す
+%define rstack r13  ; コロンワードを呼び出す時にpcを退避させるスタックのアドレス
 
 section .rodata
 
 msg_no_such_word: db ": no_such_word", 10, 0
 
-; .bssに配置されたアドレスは0で初期化される
 section .bss
 
 ; pcを退避させるためのrstackを確保
@@ -20,24 +16,16 @@ section .bss
 resq 1023
 rstack_start: resq 1
 
-; 入力された文字列が格納される場所
-input_buf: resb 1024
-
-; Forthマシンのユーザーメモリ
-user_mem: resq 65536
-
-; 追加の辞書のメモリ
-dict_mem: resq 65536
+input_buf: resb 1024    ; 入力された文字列が格納される場所
+user_mem: resq 65536    ; Forthマシンのユーザーメモリ
+dict_mem: resq 65536    ; 追加の辞書のメモリ
 
 %include "words.asm"
 
 section .data
 
-; ワードリストの最後のアドレスが入る
-last_word: dq _lw
-
-; スタックの一番下のアドレスが入る
-stack_base: dq 0
+last_word: dq _lw   ; ワードリストの最後のアドレスが入る
+stack_base: dq 0    ; スタックの一番下のアドレスが入る
 
 section .text
 
