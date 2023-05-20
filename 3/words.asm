@@ -281,10 +281,18 @@ native ".", dot
     jmp next
 
 ; stdinから1文字を読む
-; ( -- char )
+; ( -- c )
 native "key", key
     call read_char
     push rax
+    jmp next
+
+; スタックの1番目の文字を出力する
+; ( c -- )
+native "emit", emit
+    pop rdi
+    call print_char
+    call print_newline
     jmp next
 
 colon "interpreter", interpreter
