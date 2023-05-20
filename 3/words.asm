@@ -319,7 +319,7 @@ native "!", write
 native "c!", write_c
     pop rax
     pop rcx
-    movzx [rcx], eax
+    movzx [rcx], al
     jmp next
 
 colon "interpreter", interpreter
