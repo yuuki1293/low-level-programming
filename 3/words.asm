@@ -322,6 +322,13 @@ native "c!", write_c
     movzx [rcx], al
     jmp next
 
+; addrから始まる1個のセルを読む
+; ( addr -- data )
+native "@", fetch
+    pop rax
+    push qword[rax]
+    jmp next
+
 colon "interpreter", interpreter
 .start:
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
