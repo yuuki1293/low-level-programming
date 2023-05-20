@@ -329,6 +329,8 @@ native "@", fetch
     push qword[rax]
     jmp next
 
+; addrから始まる1個のbyteを読む
+; ( addr -- c )
 native "c@", fetch_c
     pop rax
     movzx rax, byte[rax]
