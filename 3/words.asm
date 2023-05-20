@@ -152,7 +152,7 @@ native ">r", push_r
 
 ; リターンスタックからデータスタックにポップ
 ; ( -- x )
-native "<r", pop_r
+native "r>", pop_r
     push qword [rstack]
     sub rstack, 8
     jmp next
