@@ -245,7 +245,19 @@ native "bye", bye
     xor rdi, rdi
     syscall
 
-; TODO: syscall
+; システムコール
+; ( call num a1 a2 a3 a4 a5 a6 -- new rax )
+native "syscall", syscall
+    pop r9
+    pop r8
+    pop r10
+    pop rdx
+    pop rsi
+    pop rdi
+    pop rax
+    syscall
+    push rax
+    jmp next
 
 ; 次に配置されている数値だけpcを進める。
 ; コンパイル時のみ
