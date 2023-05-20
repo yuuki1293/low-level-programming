@@ -303,7 +303,11 @@ native "last_word", last_word
     push qword [last_word]
     jmp next
 
-; TODO: state
+; モードを示すstateセルのアドレスをスタックにプッシュする
+; ( -- addr )
+native "state", state
+    push qword [state]
+    jmp next
 
 ; TODO: here
 
