@@ -305,7 +305,30 @@ native "@c", fetch_c
 
 ; TODO: c,
 
-; TODO: create
+; 辞書に新しい名前を持つエントリを作成する。
+; ( flags name -- )
+native "create", create
+    mov rax, [last_word]
+    mov rsi, [here]
+    mov [rsi], rax
+    add rsi, 8
+
+    pop rdi
+    mov rdx, 31
+    push rsi
+    call string_copy
+    mov rdi, rax
+    call string_length
+    pop rsi
+    add rsi, rax
+
+    pop rax
+    mov [rsi], rax
+
+    jmp next
+
+
+
 
 ; TODO: :
 
