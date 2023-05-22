@@ -127,6 +127,8 @@ native "init", init
     mov rstack, rstack_start
     mov pc, program_stub
     mov [stack_base], rsp
+    mov word [state], 0
+    mov qword [here], dict_mem
     jmp next
 
 ; 全てのコロンワードの開始
@@ -358,7 +360,7 @@ native ",", comma
 native "c,", comma_c
     mov rcx, [here]
     pop rax
-    mov [here], al
+    mov [rcx], al
     add qword [here], 1
     jmp next
 
@@ -379,9 +381,13 @@ native "create", create
     call string_length
     pop rsi
     add rsi, rax
+    inc rsi
 
     pop rax
-    mov [rsi], rax
+    mov [rsi], al
+    inc rsi
+
+    mov [here], rsi
 
     jmp next
 
@@ -405,14 +411,51 @@ colon "interpreter", interpreter
     dq xt_inbuf, xt_word ; 標準入力から文字列を読み取る
     branch0 .exit ; 文字列が空の場合.exitにジャンプ
 
+    dq xt_state, xt_fetch_c
+    branch0 .interpreter
+    
+    dq xt_inbuf, xt_find
+    dq xt_dup
+    branch0 .c_num
+
+    dq xt_cfa
+    dq xt_dup
+    dq xt_lit, 1, xt_minus
+    dq xt_fetch_c
+    branch0 .comma
+
+    dq xt_execute
+    branch .start
+.comma:
+    dq xt_comma
+    branch .start
+.c_num:
+    dq xt_drop, xt_drop
+    dq xt_inbuf, xt_number
+    branch0 .not_found
+
+    dq xt_here, xt_fetch
+    dq xt_lit, 8, xt_minus, xt_fetch
+    dq xt_lit, xt_branch, xt_eq, xt_not
+    branch0 .comma
+    dq xt_here, xt_fetch
+    dq xt_lit, 8, xt_minus, xt_fetch
+    dq xt_lit, xt_branch0, xt_eq, xt_not
+    branch0 .comma
+    
+    dq xt_lit, xt_comma
+    dq xt_comma
+
+    branch .start
+.interpreter:
     dq xt_inbuf, xt_find ; 文字列のワードヘッダを探す
     dq xt_dup
-    branch0 .num ; 文字列のワードヘッダがない場合.numにジャンプ
+    branch0 .i_num ; 文字列のワードヘッダがない場合.numにジャンプ
 
     dq xt_cfa
     dq xt_execute
     branch .start
-.num:
+.i_num:
     dq xt_drop ; 0を捨てる*2
     dq xt_drop
     dq xt_inbuf, xt_number; 数値への変換を試みる
