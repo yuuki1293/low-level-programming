@@ -396,14 +396,14 @@ colon ":", colon
     dq xt_inbuf, xt_word, xt_drop
     dq xt_lit, 0, xt_inbuf
     dq xt_create
-    dq xt_lit, xt_docol, xt_comma
+    dq xt_lit, docol_impl, xt_comma
     dq xt_state, xt_lit, 1, xt_write
     dq xt_exit
 
 ; 現在のワード定義を終了する
 colon ";", semicolon, 1
     dq xt_lit, xt_exit, xt_comma
-    dq state, xt_lit, 0, xt_write
+    dq xt_state, xt_lit, 0, xt_write
     dq xt_exit
 
 colon "interpreter", interpreter
