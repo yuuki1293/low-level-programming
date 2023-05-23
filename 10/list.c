@@ -70,6 +70,8 @@ struct list *list_node_at(struct list *p, size_t index)
     for (i = 0; i < index; i++)
     {
         p = (*p).next;
+        if (p == NULL)
+            return NULL;
     }
 
     return p;
