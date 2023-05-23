@@ -29,3 +29,15 @@ void list_add_back(int num, struct list **pp)
     struct list *p = list_create(num);
     (**pp).next = p;
 }
+
+int list_get(size_t count, struct list *p)
+{
+    struct list node = *p;
+    size_t i;
+    for (i = 0; i < count; i++)
+    {
+        node = *node.next;
+    }
+
+    return node.value;
+}
