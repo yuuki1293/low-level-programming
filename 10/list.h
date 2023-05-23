@@ -3,17 +3,15 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 
-struct node;
+struct list;
 
-typedef struct node *list;
+struct list *list_create(int);
 
-list list_create(int);
+void list_add_front(int, struct list **);
 
-void list_add_front(int, list *);
+void list_add_back(int, struct list **);
 
-void list_add_back(int, list *);
-
-int list_get(size_t, list);
+int list_get(size_t, struct list *);
 
 void list_free(list);
 
