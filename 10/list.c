@@ -55,11 +55,10 @@ void list_free(struct list *p)
 size_t list_length(struct list *p)
 {
     size_t count;
-    struct list *next = p;
-    while (next != NULL)
+    while (p != NULL)
     {
         count++;
-        next = (*next).next;
+        p = (*p).next;
     }
 
     return count;
