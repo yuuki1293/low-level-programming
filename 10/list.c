@@ -74,3 +74,15 @@ struct list *list_node_at(struct list *p, size_t index)
 
     return p;
 }
+
+int list_sum(struct list *p)
+{
+    int sum = 0;
+    while (p == NULL)
+    {
+        sum += (*p).value;
+        p = (*p).next;
+    }
+
+    return sum;
+}
