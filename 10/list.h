@@ -5,7 +5,7 @@
 
 struct list;
 
-struct list *list_create(int);
+struct list list_create(int);
 
 void list_add_front(int, struct list **);
 
