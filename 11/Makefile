@@ -1,6 +1,6 @@
 CC = gcc
 LD = gcc
-CFLAGS = -ansi -pedantic-errors -Wall -Werror -std=c89
+CFLAGS = -ansi -pedantic-errors -Wall -Werror -ggdb -std=c89
 
 all: main
 
