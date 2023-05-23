@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #ifndef _LIST_C_
 #define _LIST_C_
 
