@@ -6,6 +6,7 @@
 *.o
 *.so
 *.swp
+*.out
 
 print_string* 
 string_copy* 
