@@ -4,7 +4,7 @@ CFLAGS = -ansi -pedantic-errors -Wall -Werror -std=c89
 
 all: main
 
-main: main.o is_prime.o list.o scalar_product.o
+main: main.o is_prime.o list.o scalar_product.o higher_order.o
 	$(LD) -o $@ $^
 
 %.o: %.c %.h
