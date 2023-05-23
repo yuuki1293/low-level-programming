@@ -11,7 +11,7 @@ void list_add_front(int, struct list **);
 
 void list_add_back(int, struct list **);
 
-int list_get(size_t, const struct list *);
+int list_get(const struct list *, size_t);
 
 void list_free(struct list *);
 

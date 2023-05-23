@@ -30,7 +30,7 @@ void list_add_back(int num, struct list **pp)
     (**pp).next = p;
 }
 
-int list_get(size_t count, const struct list *p)
+int list_get(const struct list *p, size_t count)
 {
     size_t i;
     for (i = 0; i < count; i++)
