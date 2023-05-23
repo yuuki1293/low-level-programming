@@ -10,9 +10,9 @@ struct list
 struct list *list_create(int num)
 {
     struct list node;
+    struct list *p = malloc(sizeof(struct list));
     node.next = NULL;
     node.value = num;
-    struct list *p = malloc(sizeof(struct list));
     *p = node;
     return p;
 }
@@ -32,14 +32,15 @@ void list_add_back(int num, struct list **pp)
 
 int list_get(size_t count, struct list *p)
 {
-    struct list node = *p;
     size_t i;
     for (i = 0; i < count; i++)
     {
-        node = *node.next;
+        p = (*p).next;
+        if (p == NULL)
+            return 0;
     }
 
-    return node.value;
+    return (*p).value;
 }
 
 void list_free(struct list *p)
