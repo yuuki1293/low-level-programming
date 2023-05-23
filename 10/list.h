@@ -3,11 +3,7 @@
 #ifndef _LIST_C_
 #define _LIST_C_
 
-struct node
-{
-    list p;
-    int num;
-};
+struct node;
 
 typedef struct node *list;
 
