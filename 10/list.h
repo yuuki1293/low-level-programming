@@ -15,7 +15,7 @@ int list_get(size_t, struct list *);
 
 void list_free(list);
 
-int list_length(list);
+size_t list_length(list);
 
 int list_sum(list);
 
