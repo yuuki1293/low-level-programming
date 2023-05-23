@@ -13,11 +13,26 @@ void scan_list(struct list **list)
     }
 }
 
+void print_int(int value)
+{
+    printf("%d ", value);
+}
+
+void printn_int(int value)
+{
+    printf("%d\n", value);
+}
+
 int main(int argc, char **argv)
 {
-    struct list* list;
+    struct list *list = NULL;
     scan_list(&list);
-    foreach(list, puts);
+    puts("");
+    foreach (list, print_int)
+        ;
+    puts("");
+    foreach (list, printn_int)
+        ;
 
     return 0;
 }
