@@ -3,7 +3,11 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 
-struct list;
+struct list
+{
+    struct list *next;
+    int value;
+};
 
 struct list *list_create(int);
 
