@@ -23,3 +23,9 @@ void list_add_front(int num, struct list **pp)
     (*p).next = *pp;
     *pp = p;
 }
+
+void list_add_back(int num, struct list **pp)
+{
+    struct list *p = list_create(num);
+    (**pp).next = p;
+}
