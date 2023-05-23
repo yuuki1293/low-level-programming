@@ -64,3 +64,14 @@ size_t list_length(struct list *p)
 
     return count;
 }
+
+struct list *list_node_at(struct list *p, size_t index)
+{
+    size_t i;
+    for (i = 0; i < index; i++)
+    {
+        p = (*p).next;
+    }
+
+    return p;
+}
