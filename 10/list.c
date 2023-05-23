@@ -30,7 +30,7 @@ void list_add_back(int num, struct list **pp)
     (**pp).next = p;
 }
 
-int list_get(size_t count, struct list *p)
+int list_get(size_t count, const struct list *p)
 {
     size_t i;
     for (i = 0; i < count; i++)
@@ -53,7 +53,7 @@ void list_free(struct list *p)
     }
 }
 
-size_t list_length(struct list *p)
+size_t list_length(const struct list *p)
 {
     size_t count;
     while (p != NULL)
@@ -78,7 +78,7 @@ struct list *list_node_at(struct list *p, size_t index)
     return p;
 }
 
-int list_sum(struct list *p)
+int list_sum(const struct list *p)
 {
     int sum = 0;
     while (p == NULL)

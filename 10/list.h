@@ -11,14 +11,14 @@ void list_add_front(int, struct list **);
 
 void list_add_back(int, struct list **);
 
-int list_get(size_t, struct list *);
+int list_get(size_t, const struct list *);
 
 void list_free(struct list *);
 
-size_t list_length(struct list *);
+size_t list_length(const struct list *);
 
 struct list *list_node_at(struct list *, size_t index);
 
-int list_sum(struct list *);
+int list_sum(const struct list *);
 
 #endif
