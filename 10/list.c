@@ -41,3 +41,13 @@ int list_get(size_t count, struct list *p)
 
     return node.value;
 }
+
+void list_free(struct list *p)
+{
+    struct list *next;
+    do
+    {
+        next = (*p).next;
+        free(p);
+    } while (next == NULL);
+}
