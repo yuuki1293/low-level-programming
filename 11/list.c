@@ -21,7 +21,19 @@ void list_add_front(int num, struct list **pp)
 void list_add_back(int num, struct list **pp)
 {
     struct list *p = list_create(num);
-    (**pp).next = p;
+    struct list *last = *pp;
+
+    if (last == NULL)
+    {
+        *pp = p;
+        return;
+    }
+
+    while ((*last).next != NULL)
+    {
+        last = (*last).next;
+    }
+    (*last).next = p;
 }
 
 int list_get(const struct list *p, size_t count)
