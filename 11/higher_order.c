@@ -8,6 +8,8 @@ void foreach (const struct list *list, void (*f)(int))
         f((*list).value);
         list = (*list).next;
     }
+
+    return;
 }
 
 struct list *map(const struct list *list, int (*f)(int))
