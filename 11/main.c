@@ -33,6 +33,7 @@ int main(int argc, char **argv)
     puts("");
     foreach (list, printn_int)
         ;
+    
 
     return 0;
 }
