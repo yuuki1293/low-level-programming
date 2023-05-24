@@ -23,7 +23,7 @@ void printn_int(int value)
     printf("%d\n", value);
 }
 
-int main(int argc, char **argv)
+int main()
 {
     struct list *list = NULL;
     scan_list(&list);
