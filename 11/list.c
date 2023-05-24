@@ -23,12 +23,6 @@ void list_add_back(int num, struct list **pp)
     struct list *p = list_create(num);
     struct list *last = *pp;
 
-    if (last == NULL)
-    {
-        *pp = p;
-        return;
-    }
-
     while ((*last).next != NULL)
     {
         last = (*last).next;
