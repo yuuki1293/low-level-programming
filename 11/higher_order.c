@@ -29,6 +29,15 @@ struct list* map(int (*f)(int), const struct list* list) {
     return new_list;
 }
 
+void map_mut(int (*f)(int), struct list* list) {
+    if (list) {
+        (*list).value = f((*list).value);
+        map_mut(f, (*list).next);
+    }
+    else
+        return;
+}
+
 int foldl(int acc, int(*f)(int x, int a), const struct list* list) {
     if (list)
         return foldl(f(acc, (*list).value), f, (*list).next);

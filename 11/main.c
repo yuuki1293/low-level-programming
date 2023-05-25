@@ -36,6 +36,10 @@ int max(int a, int b) {
     return a > b ? a : b;
 }
 
+int abs(int a) {
+    return a > 0 ? a : -a;
+}
+
 int main() {
     struct list* list = NULL;
     scan_list(&list);
@@ -51,6 +55,9 @@ int main() {
         foldl(0, sum, list));
     printf("max: %d\n",
         foldl(INT_MIN, max, list));
+    map_mut(abs, list);
+    foreach(print_int, list);
+    puts("");
 
     return 0;
 }
