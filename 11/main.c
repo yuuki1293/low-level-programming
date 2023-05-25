@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <limits.h>
-#include "is_prime.h"
 #include "list.h"
-#include "scalar_product.h"
 #include "higher_order.h"
 
 void scan_list(struct list** list) {
