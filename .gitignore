@@ -8,6 +8,8 @@
 *.swp
 *.out
 
+settings.json
+
 print_string* 
 string_copy* 
 string_length* 
