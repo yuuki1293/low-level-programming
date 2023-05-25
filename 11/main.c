@@ -4,37 +4,30 @@
 #include "scalar_product.h"
 #include "higher_order.h"
 
-void scan_list(struct list** list)
-{
+void scan_list(struct list** list) {
     int value;
-    while (scanf("%d", &value) != EOF)
-    {
+    while (scanf("%d", &value) != EOF) {
         list_add_front(value, list);
     }
 }
 
-void print_int(int value)
-{
+void print_int(int value) {
     printf("%d ", value);
 }
 
-void printn_int(int value)
-{
+void printn_int(int value) {
     printf("%d\n", value);
 }
 
-int square(int x)
-{
+int square(int x) {
     return x * x;
 }
 
-int cubic(int x)
-{
+int cubic(int x) {
     return x * x * x;
 }
 
-int main()
-{
+int main() {
     struct list* list = NULL;
     scan_list(&list);
     puts("");
