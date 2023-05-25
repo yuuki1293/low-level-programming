@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <limits.h>
 #include "is_prime.h"
 #include "list.h"
 #include "scalar_product.h"
@@ -27,6 +28,14 @@ int cubic(int x) {
     return x * x * x;
 }
 
+int sum(int a, int b) {
+    return a + b;
+}
+
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+
 int main() {
     struct list* list = NULL;
     scan_list(&list);
@@ -38,6 +47,10 @@ int main() {
     puts("");
     foreach(map(list, cubic), print_int);
     puts("");
+    printf("sum: %d\n",
+        foldl(0, sum, list));
+    printf("max: %d\n",
+        foldl(INT_MIN, max, list));
 
     return 0;
 }
