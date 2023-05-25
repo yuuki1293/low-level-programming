@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "list.h"
+#include "higher_order.h"
 
 void foreach (const struct list *list, void (*f)(int))
 {
