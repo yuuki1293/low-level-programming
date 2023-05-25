@@ -40,6 +40,10 @@ int abs(int a) {
     return a > 0 ? a : -a;
 }
 
+int double_int(int a) {
+    return a * 2;
+}
+
 int main() {
     struct list* list = NULL;
     scan_list(&list);
@@ -56,6 +60,11 @@ int main() {
     printf("max: %d\n",
         foldl(INT_MIN, max, list));
     map_mut(abs, list);
+    foreach(print_int, list);
+    puts("");
+    list = NULL;
+
+    list = iterate(1, 10, double_int);
     foreach(print_int, list);
     puts("");
 

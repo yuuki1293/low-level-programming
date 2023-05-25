@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "list.h"
 #include "higher_order.h"
 
@@ -43,4 +44,16 @@ int foldl(int acc, int(*f)(int x, int a), const struct list* list) {
         return foldl(f(acc, (*list).value), f, (*list).next);
     else
         return acc;
+}
+
+struct list* iterate(int s, int n, int(*f)(int s)) {
+    struct list* node;
+    if (n) {
+        node = malloc(sizeof(struct list));
+        (*node).value = s;
+        (*node).next = iterate(f(s), n - 1, f);
+        return node;
+    }
+    else
+        return NULL;
 }
