@@ -3,9 +3,9 @@
 
 #include "list.h"
 
-void foreach(const struct list*, void (*)(int));
+void foreach(void (*f)(int), const struct list*, list);
 
-struct list* map(const struct list*, int (*)(int));
+struct list* map(int (*f)(int), const struct list*, list);
 
 int foldl(int acc, int(*f)(int x, int a), const struct list* list);
 

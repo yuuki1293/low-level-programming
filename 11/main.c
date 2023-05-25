@@ -40,12 +40,12 @@ int main() {
     struct list* list = NULL;
     scan_list(&list);
     puts("");
-    foreach(list, print_int);
+    foreach(print_int, list);
     puts("");
-    foreach(list, printn_int);
-    foreach(map(list, square), print_int);
+    foreach(printn_int, list);
+    foreach(print_int, map(square, list));
     puts("");
-    foreach(map(list, cubic), print_int);
+    foreach(print_int, map(cubic, list));
     puts("");
     printf("sum: %d\n",
         foldl(0, sum, list));

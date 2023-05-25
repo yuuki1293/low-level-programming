@@ -2,7 +2,7 @@
 #include "list.h"
 #include "higher_order.h"
 
-void foreach(const struct list* list, void (*f)(int)) {
+void foreach(void (*f)(int), const struct list* list) {
     while (list != NULL) {
         f((*list).value);
         list = (*list).next;
@@ -11,7 +11,7 @@ void foreach(const struct list* list, void (*f)(int)) {
     return;
 }
 
-struct list* map(const struct list* list, int (*f)(int)) {
+struct list* map(int (*f)(int), const struct list* list) {
     struct list* new_list;
     struct list* new_node;
 
