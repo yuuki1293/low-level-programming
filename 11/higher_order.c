@@ -4,12 +4,12 @@
 #include "higher_order.h"
 
 void foreach(void (*f)(int), const struct list* list) {
-    while (list != NULL) {
+    if (list) {
         f((*list).value);
-        list = (*list).next;
+        foreach(f, (*list).next);
     }
-
-    return;
+    else
+        return;
 }
 
 struct list* map(int (*f)(int), const struct list* list) {
