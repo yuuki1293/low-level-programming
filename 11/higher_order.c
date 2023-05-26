@@ -14,20 +14,13 @@ void foreach(void (*f)(int), const struct list* list) {
 
 struct list* map(int (*f)(int), const struct list* list) {
     struct list* new_list;
-    struct list* new_node;
-
-    if (!list)
-        return NULL;
-
-    new_list = list_create(f((*list).value));
-    new_node = new_list;
-    list = (*list).next;
-    while (list != NULL) {
-        (*new_node).next = list_create(f((*list).value));
-        new_node = (*new_node).next;
-        list = (*list).next;
+    if (list) {
+        new_list = map(f, (*list).next);
+        list_add_front(f((*list).value), &new_list);
+        return new_list;
     }
-    return new_list;
+    else
+        return NULL;
 }
 
 void map_mut(int (*f)(int), struct list* list) {
