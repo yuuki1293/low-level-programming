@@ -3,14 +3,14 @@
 
 #include "list.h"
 
-void foreach(void (*f)(int), const struct list* list);
+void foreach(void (*f)(int), const LIST* list);
 
-struct list* map(int (*f)(int), const struct list* list);
+LIST* map(int (*f)(int), const LIST* list);
 
-void map_mut(int (*f)(int), struct list* list);
+void map_mut(int (*f)(int), LIST* list);
 
-int foldl(int acc, int(*f)(int x, int a), const struct list* list);
+int foldl(int acc, int(*f)(int x, int a), const LIST* list);
 
-struct list* iterate(int s, int n, int(*f)(int s));
+LIST* iterate(int s, int n, int(*f)(int s));
 
 #endif

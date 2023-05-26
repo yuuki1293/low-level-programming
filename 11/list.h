@@ -3,25 +3,25 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 
-struct list {
+typedef struct list {
     struct list* next;
     int value;
-};
+} LIST;
 
-struct list* list_create(int);
+LIST* list_create(int);
 
-void list_add_front(int, struct list**);
+void list_add_front(int, LIST**);
 
-void list_add_back(int, struct list**);
+void list_add_back(int, LIST**);
 
-int list_get(const struct list*, size_t);
+int list_get(const LIST*, size_t);
 
-void list_free(struct list*);
+void list_free(LIST*);
 
-size_t list_length(const struct list*);
+size_t list_length(const LIST*);
 
-struct list* list_node_at(struct list*, size_t index);
+LIST* list_node_at(LIST*, size_t index);
 
-int list_sum(const struct list*);
+int list_sum(const LIST*);
 
 #endif

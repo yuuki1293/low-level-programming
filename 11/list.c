@@ -1,24 +1,24 @@
 #include <malloc.h>
 #include "list.h"
 
-struct list* list_create(int num) {
-    struct list node;
-    struct list* p = malloc(sizeof(struct list));
+LIST* list_create(int num) {
+    LIST node;
+    LIST* p = malloc(sizeof(LIST));
     node.next = NULL;
     node.value = num;
     *p = node;
     return p;
 }
 
-void list_add_front(int num, struct list** pp) {
-    struct list* p = list_create(num);
+void list_add_front(int num, LIST** pp) {
+    LIST* p = list_create(num);
     (*p).next = *pp;
     *pp = p;
 }
 
-void list_add_back(int num, struct list** pp) {
-    struct list* p = list_create(num);
-    struct list* last = *pp;
+void list_add_back(int num, LIST** pp) {
+    LIST* p = list_create(num);
+    LIST* last = *pp;
 
     while ((*last).next != NULL) {
         last = (*last).next;
@@ -26,7 +26,7 @@ void list_add_back(int num, struct list** pp) {
     (*last).next = p;
 }
 
-int list_get(const struct list* p, size_t count) {
+int list_get(const LIST* p, size_t count) {
     size_t i;
     for (i = 0; i < count; i++) {
         p = (*p).next;
@@ -37,15 +37,15 @@ int list_get(const struct list* p, size_t count) {
     return (*p).value;
 }
 
-void list_free(struct list* p) {
-    struct list* next = p;
+void list_free(LIST* p) {
+    LIST* next = p;
     while (next != NULL) {
         free(next);
         next = (*next).next;
     }
 }
 
-size_t list_length(const struct list* p) {
+size_t list_length(const LIST* p) {
     size_t count;
     while (p != NULL) {
         count++;
@@ -55,7 +55,7 @@ size_t list_length(const struct list* p) {
     return count;
 }
 
-struct list* list_node_at(struct list* p, size_t index) {
+LIST* list_node_at(LIST* p, size_t index) {
     size_t i;
     for (i = 0; i < index; i++) {
         p = (*p).next;
@@ -66,7 +66,7 @@ struct list* list_node_at(struct list* p, size_t index) {
     return p;
 }
 
-int list_sum(const struct list* p) {
+int list_sum(const LIST* p) {
     int sum = 0;
     while (p == NULL) {
         sum += (*p).value;

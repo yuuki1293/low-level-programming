@@ -3,7 +3,7 @@
 #include "list.h"
 #include "higher_order.h"
 
-void foreach(void (*f)(int), const struct list* list) {
+void foreach(void (*f)(int), const LIST* list) {
     if (list) {
         f((*list).value);
         foreach(f, (*list).next);
@@ -13,8 +13,8 @@ void foreach(void (*f)(int), const struct list* list) {
         return;
 }
 
-struct list* map(int (*f)(int), const struct list* list) {
-    struct list* new_list;
+LIST* map(int (*f)(int), const LIST* list) {
+    LIST* new_list;
     if (list) {
         new_list = map(f, (*list).next);
         list_add_front(f((*list).value), &new_list);
@@ -24,7 +24,7 @@ struct list* map(int (*f)(int), const struct list* list) {
         return NULL;
 }
 
-void map_mut(int (*f)(int), struct list* list) {
+void map_mut(int (*f)(int), LIST* list) {
     if (list) {
         (*list).value = f((*list).value);
         map_mut(f, (*list).next);
@@ -33,17 +33,17 @@ void map_mut(int (*f)(int), struct list* list) {
         return;
 }
 
-int foldl(int acc, int(*f)(int x, int a), const struct list* list) {
+int foldl(int acc, int(*f)(int x, int a), const LIST* list) {
     if (list)
         return foldl(f(acc, (*list).value), f, (*list).next);
     else
         return acc;
 }
 
-struct list* iterate(int s, int n, int(*f)(int s)) {
-    struct list* node;
+LIST* iterate(int s, int n, int(*f)(int s)) {
+    LIST* node;
     if (n) {
-        node = malloc(sizeof(struct list));
+        node = malloc(sizeof(LIST));
         (*node).value = s;
         (*node).next = iterate(f(s), n - 1, f);
         return node;

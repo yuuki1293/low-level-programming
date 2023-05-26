@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <limits.h>
+#include <stdbool.h>
 #include "list.h"
 #include "higher_order.h"
+#include "file.h"
 
-void scan_list(struct list** list) {
+void scan_list(LIST** list) {
     int value;
     while (scanf("%d", &value) != EOF) {
         list_add_front(value, list);
@@ -43,7 +45,7 @@ int double_int(int a) {
 }
 
 int main() {
-    struct list* list = NULL;
+    LIST* list = NULL;
     scan_list(&list);
     puts("");
     foreach(print_int, list);
