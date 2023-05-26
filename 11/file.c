@@ -5,11 +5,25 @@
 
 bool save(LIST* lst, const char* filename) {
     FILE* file;
-    file = fopen(filename, "w");
+    bool result;
+    file = fopen(filename, "wb");
     while (lst) {
         fwrite(&(*lst).value, sizeof(int), 1, file);
         lst = (*lst).next;
     }
+    result = fflush(file);
+    fclose(file);
 
-    return fflush(file) ? true : false;
+    return  result ? true : false;
+}
+
+LIST* load(const char* filename) {
+    FILE* file;
+    int value;
+    file = fopen(filename, "rb");
+    while (fread(&value, sizeof(int), 1, file)) {
+
+    }
+
+    return true;
 }
