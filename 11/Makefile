@@ -4,7 +4,7 @@ CFLAGS = -ansi -pedantic-errors -Wall -Werror -Wextra -ggdb -std=c89
 
 all: main
 
-main: main.o list.o higher_order.o
+main: main.o list.o higher_order.o file.o
 	$(LD) -o $@ $^
 
 %.o: %.c %.h
