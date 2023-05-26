@@ -68,5 +68,7 @@ int main() {
     foreach(print_int, list);
     puts("");
 
+    save(list, "hoge");
+
     return 0;
 }
