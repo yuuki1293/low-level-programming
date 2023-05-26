@@ -7,6 +7,7 @@ void foreach(void (*f)(int), const struct list* list) {
     if (list) {
         f((*list).value);
         foreach(f, (*list).next);
+        return;
     }
     else
         return;
