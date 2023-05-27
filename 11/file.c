@@ -38,7 +38,7 @@ bool load(LIST** lst, const char* filename) {
     return result;
 }
 
-bool serialize(LIST* lst, const char* filename){
+bool serialize(LIST* lst, const char* filename) {
     FILE* file;
     bool result;
     file = fopen(filename, "wb");
@@ -50,4 +50,24 @@ bool serialize(LIST* lst, const char* filename){
     fclose(file);
 
     return  result ? true : false;
+}
+
+bool deserialize(LIST** lst, const char* filename) {
+    FILE* file;
+    int value;
+    bool result = true;
+
+    file = fopen(filename, "rb");
+
+    while (fread(&value, sizeof(int), 1, file)) {
+        *lst = list_create(value);
+        lst = &((**lst).next);
+    }
+
+    if (ferror(file))
+        result = false;
+
+    fclose(file);
+
+    return result;
 }

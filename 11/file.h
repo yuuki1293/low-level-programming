@@ -10,4 +10,6 @@ bool load(LIST** lst, const char* filename);
 
 bool serialize(LIST* lst, const char* filename);
 
+bool deserialize(LIST** lst, const char* filename);
+
 #endif
