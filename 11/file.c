@@ -7,9 +7,9 @@
 bool save(LIST* lst, const char* filename) {
     FILE* file;
     bool result;
-    file = fopen(filename, "wb");
+    file = fopen(filename, "w");
     while (lst) {
-        fwrite(&(*lst).value, sizeof(int), 1, file);
+        fprintf(file, "%d ", (*lst).value);
         lst = (*lst).next;
     }
     result = fflush(file);
@@ -23,9 +23,9 @@ bool load(LIST** lst, const char* filename) {
     int value;
     bool result = true;
 
-    file = fopen(filename, "rb");
+    file = fopen(filename, "r");
 
-    while (fread(&value, sizeof(int), 1, file)) {
+    while (fscanf(file, "%d", &value) != EOF) {
         *lst = list_create(value);
         lst = &((**lst).next);
     }
