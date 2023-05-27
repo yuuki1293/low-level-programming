@@ -5,7 +5,8 @@
 #include "higher_order.h"
 #include "file.h"
 
-#define FILENAME "hoge"
+#define FILENAME_TXT "hoge.txt"
+#define FILENAME_BIN "hoge.bin"
 
 void scan_list(LIST** list) {
     int value;
@@ -71,9 +72,15 @@ int main() {
     foreach(print_int, list);
     puts("");
 
-    save(list, FILENAME);
+    save(list, FILENAME_TXT);
     list = NULL;
-    load(&list, FILENAME);
+    load(&list, FILENAME_TXT);
+    foreach(print_int, list);
+    puts("");
+
+    serialize(list, FILENAME_BIN);
+    list = NULL;
+    deserialize(&list, FILENAME_BIN);
     foreach(print_int, list);
     puts("");
 
