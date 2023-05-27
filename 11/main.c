@@ -84,5 +84,7 @@ int main() {
     foreach(print_int, list);
     puts("");
 
+    list_free(list);
+
     return 0;
 }
