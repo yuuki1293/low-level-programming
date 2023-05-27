@@ -37,3 +37,17 @@ bool load(LIST** lst, const char* filename) {
 
     return result;
 }
+
+bool serialize(LIST* lst, const char* filename){
+    FILE* file;
+    bool result;
+    file = fopen(filename, "wb");
+    while (lst) {
+        fwrite(&(*lst).value, sizeof(int), 1, file);
+        lst = (*lst).next;
+    }
+    result = fflush(file);
+    fclose(file);
+
+    return  result ? true : false;
+}

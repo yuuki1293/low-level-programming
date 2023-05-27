@@ -8,4 +8,6 @@ bool save(LIST* lst, const char* filename);
 
 bool load(LIST** lst, const char* filename);
 
+bool serialize(LIST* lst, const char* filename);
+
 #endif
