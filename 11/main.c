@@ -5,6 +5,8 @@
 #include "higher_order.h"
 #include "file.h"
 
+#define FILENAME "hoge"
+
 void scan_list(LIST** list) {
     int value;
     while (scanf("%d", &value) != EOF) {
@@ -46,6 +48,7 @@ int double_int(int a) {
 
 int main() {
     LIST* list = NULL;
+
     scan_list(&list);
     puts("");
     foreach(print_int, list);
@@ -68,7 +71,11 @@ int main() {
     foreach(print_int, list);
     puts("");
 
-    save(list, "hoge");
+    save(list, FILENAME);
+    list = NULL;
+    load(&list, FILENAME);
+    foreach(print_int, list);
+    puts("");
 
     return 0;
 }

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <malloc.h>
 #include "list.h"
 #include "file.h"
 
@@ -17,13 +18,22 @@ bool save(LIST* lst, const char* filename) {
     return  result ? true : false;
 }
 
-LIST* load(const char* filename) {
+bool load(LIST** lst, const char* filename) {
     FILE* file;
     int value;
-    file = fopen(filename, "rb");
-    while (fread(&value, sizeof(int), 1, file)) {
+    bool result = true;
 
+    file = fopen(filename, "rb");
+
+    while (fread(&value, sizeof(int), 1, file)) {
+        *lst = list_create(value);
+        lst = &((**lst).next);
     }
 
-    return true;
+    if (ferror(file))
+        result = false;
+
+    fclose(file);
+
+    return result;
 }
