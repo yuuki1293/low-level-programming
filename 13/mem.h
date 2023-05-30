@@ -2,6 +2,7 @@
 #define _MEM_H_
 
 #define __USE_MISC
+#define _DEFAULT_SOURCE
 
 #include <stdbool.h>
 #include <stddef.h>
