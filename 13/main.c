@@ -10,6 +10,8 @@ int main() {
     *a = 100;
     *b = 200;
     *b += *a;
+    _free(a);
+    _free(b);
     printf("%ld\n", *b);
 
     return 0;

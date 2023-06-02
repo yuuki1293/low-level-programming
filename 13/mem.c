@@ -32,6 +32,10 @@ static void* map_new_next(struct mem* memory, size_t query) {
     return map_new(memory + (*memory).capacity, query);
 }
 
+static bool is_connectable(struct mem* front, struct mem* back) {
+    return front < back && back->is_free;
+}
+
 void* _malloc(size_t query) {
     struct mem* memory, * prev = HEAP_START;
     expand_query(&query);
@@ -58,6 +62,15 @@ void* _malloc(size_t query) {
     }
 
     return (char*)memory + sizeof(struct mem);
+}
+
+void  _free(void* mem) {
+    struct mem* header = (struct mem*)((char*)mem - sizeof(struct mem));
+    header->is_free = true;
+    if (is_connectable(header, header->next)) {
+        header->capacity += header->next->capacity;
+        header->next = header->next->next;
+    }
 }
 
 void* heap_init(size_t initial_size) {
