@@ -19,7 +19,6 @@ struct __attribute__((packed))
     uint32_t biXPelsPerMeter;
     uint32_t biYPelsPerMeter;
     uint32_t biClrUsed;
-    uint32_t biClrUsed;
     uint32_t biClrImportant;
 };
 
