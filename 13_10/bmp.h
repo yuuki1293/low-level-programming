@@ -26,4 +26,13 @@ struct pixel {
     unsigned char b, g, r;
 };
 
+/**
+ * @brief ファイルポインタからbmp_headerを取り出す。ファイルポインタはヘッダサイズだけ進む。
+ * 
+ * @param file ファイルポインタ。
+ * @param header bmp_headerのポインタ。
+ * @return size_t 読み込んだデータ数。0か1。
+ */
+size_t load_bmp_header(FILE* file, struct bmp_header* header);
+
 #endif // _BMP_H_
