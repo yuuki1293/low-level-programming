@@ -22,4 +22,8 @@ struct __attribute__((packed))
     uint32_t biClrImportant;
 };
 
+struct pixel {
+    unsigned char b, g, r;
+};
+
 #endif // _BMP_H_
