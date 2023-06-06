@@ -8,7 +8,7 @@ struct __attribute__((packed))
     uint16_t bfType;
     uint32_t bfileSize;
     uint32_t bfReserved;
-    uint32_t bOffBits;
+    uint32_t bfOffBits;
     uint32_t biSize;
     uint32_t biWidth;
     uint32_t biHeight;
@@ -34,5 +34,12 @@ struct pixel {
  * @return size_t 読み込んだデータ数。0か1。
  */
 size_t load_bmp_header(FILE* file, struct bmp_header* header);
+
+/**
+ * @brief bmp画像を時計回りに回転させる。
+ * 
+ * @param file 
+ */
+void rotate_bmp(const FILE* file);
 
 #endif // _BMP_H_
