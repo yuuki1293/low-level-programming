@@ -9,10 +9,8 @@ size_t load_bmp_header(FILE* file, struct bmp_header* header) {
 }
 
 void save_bmp(FILE* file, const struct bmp_header* header, const struct pixel* pixels) {
-    fseek(file, 0, SEEK_SET);
     fwrite(header, sizeof(*header), 1, file);
     fwrite(pixels, sizeof(*pixels), header->biWidth * header->biHeight, file);
-    fflush(file);
     return;
 }
 
