@@ -2,6 +2,8 @@
 #define _BMP_H_
 
 #include <stdint.h>
+#include <stdio.h>
+#include <malloc.h>
 
 struct __attribute__((packed))
     bmp_header {
@@ -35,11 +37,13 @@ struct pixel {
  */
 size_t load_bmp_header(FILE* file, struct bmp_header* header);
 
+void save_bmp(FILE* file, const struct bmp_header* header, const struct pixel* pixels);
+
 /**
  * @brief bmp画像を時計回りに回転させる。
  * 
  * @param file 
  */
-void rotate_bmp(const FILE* file);
+void rotate_bmp(char* file);
 
-#endif // _BMP_H_
+#endif /*_BMP_H_*/
