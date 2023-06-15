@@ -1,6 +1,6 @@
 #include "bmp.h"
 
-#define BM 0x4D42 /* BM */
+#define BM 0x4D42 /* (uint16_t)(*"BM") */
 
 #define SWAP(a, b) (a ^= b, b = a ^ b , a ^= b)
 

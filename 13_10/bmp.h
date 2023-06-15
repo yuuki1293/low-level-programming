@@ -42,7 +42,7 @@ void save_bmp(FILE* file, const struct bmp_header* header, const struct pixel* p
 /**
  * @brief bmp画像を時計回りに回転させる。
  * 
- * @param file 
+ * @param file ファイル名
  */
 void rotate_bmp(char* file);
 
