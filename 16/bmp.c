@@ -4,12 +4,28 @@
 
 #define SWAP(a, b) (a ^= b, b = a ^ b , a ^= b)
 
-size_t load_bmp_header(FILE* file, struct bmp_header* header) {
-    return fread(header, sizeof(struct bmp_header), 1, file);
+size_t load_bmp(const char* filename, struct bmp_header* header, struct image* image) {
+    FILE* fp = fopen(filename, "rb");
+    if (fread(header, sizeof(struct bmp_header), 1, fp) < 1) {
+        fclose(fp);
+        return 1;
+    }
+    if (fread(image, sizeof(struct image), 1, fp) < 1) {
+        fclose(fp);
+        return 1;
+    }
+    return fclose(fp);
 }
 
-void save_bmp(FILE* file, const struct bmp_header* header, const struct image* image) {
-    fwrite(header, sizeof(*header), 1, file);
-    fwrite(image->array, sizeof(struct pixel), header->biWidth * header->biHeight, file);
-    return;
+size_t save_bmp(const char* filename, struct bmp_header* header, struct image* image) {
+    FILE* fp = fopen(filename, "wb");
+    if (fwrite(header, sizeof(struct bmp_header), 1, fp)) {
+        fclose(fp);
+        return 1;
+    }
+    if (fwrite(image->array, sizeof(struct pixel), header->biWidth * header->biHeight, fp)) {
+        fclose(fp);
+        return 1;
+    }
+    return fclose(fp);
 }

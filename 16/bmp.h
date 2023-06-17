@@ -34,14 +34,14 @@ struct image {
 };
 
 /**
- * @brief ファイルポインタからbmp_headerを取り出す。ファイルポインタはヘッダサイズだけ進む。
+ * @brief ファイルポインタからbmpを取り出す。ファイルポインタはヘッダサイズだけ進む。
  * 
  * @param file ファイルポインタ。
  * @param header bmp_headerのポインタ。
  * @return size_t 読み込んだデータ数。0か1。
  */
-size_t load_bmp_header(FILE* file, struct bmp_header* header);
+size_t load_bmp(const char* filename, struct bmp_header* header, struct image* image);
 
-void save_bmp(FILE* file, const struct bmp_header* header, const struct image* image);
+size_t save_bmp(const char* filename, struct bmp_header* header, struct image* image);
 
 #endif /*_BMP_H_*/
