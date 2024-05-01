@@ -1,17 +1,14 @@
 #include <inttypes.h>
-struct pixel { uint8_t b, g, r; };
-
-struct image {
-    uint32_t width, height;
-    struct pixel* array;
-};
+#include "bmp.h"
 
 struct pixel* pixel_of(struct image img, uint32_t x, uint32_t y){
     return img.array + x + y * img.width;
 }
 
 static unsigned char sat( uint64_t x) {
-    if (x < 256) return x; return 255; 
+    if (x < 256)
+        return x;
+    return 255; 
 }
 
 static void sepia_one( struct pixel* const pixel ) {
