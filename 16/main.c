@@ -9,8 +9,8 @@ float const byte_to_float[] = {
 
 void applySepiaFilter(struct image* image);
 void mulMatrixSepia(struct pixel* const p);
-static unsigned char sat( uint64_t x);
-static void sepia_one( struct pixel* const pixel );
+static unsigned char sat(uint64_t x);
+static void sepia_one(struct pixel* const pixel);
 
 int main() {
     struct bmp_header header;
@@ -24,25 +24,23 @@ int main() {
 }
 
 void applySepiaFilter(struct image* image) {
+    int rest = image->height * image->width;
     struct pixel* pixels = image->array;
-    int size = image->height * image->width;
     int i = 0;
 
-    while (size >= 4)
-    {
-        mulMatrixSepia(pixels+i);
-        size -=4;
+    while (rest >= 4) {
+        mulMatrixSepia(pixels + i);
+        rest -= 4;
         i += 4;
     }
-    while (size > 0)
-    {
-        sepia_one(pixels+i);
-        size--;
+    while (rest > 0) {
+        sepia_one(pixels + i);
+        rest--;
         i++;
     }
 }
 
-void mulMatrixSepia(struct pixel* const p) {
+void mulMatrixSepia(struct pixel* p) {
 #define c11 .393f
 #define c12 .769f
 #define c13 .189f
@@ -53,10 +51,12 @@ void mulMatrixSepia(struct pixel* const p) {
 #define c32 .534f
 #define c33 .131f
 
-    uint8_t floatx4xmm[3][4] = {0};
+    uint8_t floatx4xmm[3][3][4] = { 0 };
     int i, j, k = 0;
-    int64_t mask_arr[2] __attribute__((aligned(16))) = {0, 0x0004080C00000000};
-    __m128i mask = _mm_load_si128((__m128i*)mask_arr);
+    uint8_t mask_arr[16] __attribute__((aligned(16))) = { 0x00, 0x04, 0x08, 0x0C };
+    __m128i m_mask = _mm_load_si128((__m128i*)mask_arr);
+    uint32_t ret_mask_arr[16] __attribute__((aligned(16))) = { 0xFFFFFFFF };
+    __m128i m_ret_mask = _mm_load_si128((__m128i*)ret_mask_arr);
 
     static const float coefficient[3][3][4] = {
         {{c11, c21, c31, c11},
@@ -70,52 +70,51 @@ void mulMatrixSepia(struct pixel* const p) {
         {c33, c13, c23, c33}},
     };
 
-    for (i = 0; i < 3; i++)
-    {
-        __m128 xmm0, xmm1, xmm2;
+    for (j = 0; j < 12; j++) {
+        floatx4xmm[0][0][j] = p[k / 3].b;
+        floatx4xmm[1][0][j] = p[k / 3].g;
+        floatx4xmm[2][0][j] = p[k / 3].r;
+        k++;
+    }
 
-        for (j = 0; j < 4; j++)
-        {
-            floatx4xmm[0][j] = p[k / 3].b;
-            floatx4xmm[1][j] = p[k / 3].g;
-            floatx4xmm[2][j] = p[k / 3].r;
-            k++;
-        }
+    for (i = 0; i < 3; i++) {
+        __m128 xmm0, xmm1, xmm2; __m128i xmm3, m_ret;
 
-        xmm0 = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)floatx4xmm[0])));
-        xmm1 = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)floatx4xmm[1])));
-        xmm2 = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)floatx4xmm[2])));
+        xmm0 = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)floatx4xmm[0][i])));
+        xmm1 = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)floatx4xmm[1][i])));
+        xmm2 = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)floatx4xmm[2][i])));
 
         xmm0 = _mm_mul_ps(xmm0, _mm_load_ps(coefficient[i][0]));
         xmm1 = _mm_mul_ps(xmm1, _mm_load_ps(coefficient[i][1]));
         xmm2 = _mm_mul_ps(xmm2, _mm_load_ps(coefficient[i][2]));
 
-        xmm0 = _mm_add_ps(_mm_add_ps(xmm0, xmm1), xmm2);
+        xmm3 = _mm_cvttps_epi32(_mm_add_ps(_mm_add_ps(xmm0, xmm1), xmm2));
 
-        _mm_storeu_si128((__m128i*)((uint8_t*)p+4*i), _mm_shuffle_epi8(_mm_cvttps_epi32(xmm0), mask));
+        m_ret = _mm_shuffle_epi8(xmm3, m_mask);
+        _mm_maskstore_epi32((int*)((uint8_t*)p + 4 * i), m_ret_mask, m_ret);
     }
 }
 
-static unsigned char sat( uint64_t x) {
+static unsigned char sat(uint64_t x) {
     if (x < 256)
         return x;
-    return 255; 
+    return 255;
 }
 
-static void sepia_one( struct pixel* const pixel ) {
-    static const float c[3][3] =  {
-        { .393f, .769f, .189f }, 
+static void sepia_one(struct pixel* const pixel) {
+    static const float c[3][3] = {
+        { .393f, .769f, .189f },
         { .349f, .686f, .168f },
         { .272f, .534f, .131f } };
     struct pixel const old = *pixel;
 
     pixel->r = sat(
-            old.r * c[0][0] + old.g * c[0][1] + old.b * c[0][2]
-            );
+        old.r * c[0][0] + old.g * c[0][1] + old.b * c[0][2]
+    );
     pixel->g = sat(
-            old.r * c[1][0] + old.g * c[1][1] + old.b * c[1][2]
-            );
+        old.r * c[1][0] + old.g * c[1][1] + old.b * c[1][2]
+    );
     pixel->b = sat(
-            old.r * c[2][0] + old.g * c[2][1] + old.b * c[2][2]
-            );
+        old.r * c[2][0] + old.g * c[2][1] + old.b * c[2][2]
+    );
 }
