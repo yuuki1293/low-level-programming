@@ -41,15 +41,15 @@ void applySepiaFilter(struct image* image) {
 }
 
 void mulMatrixSepia(struct pixel* p) {
-#define c11 .393f
-#define c12 .769f
-#define c13 .189f
-#define c21 .349f
+#define c11 .131f
+#define c12 .534f
+#define c13 .272f
+#define c21 .168f
 #define c22 .686f
-#define c23 .168f
-#define c31 .272f
-#define c32 .534f
-#define c33 .131f
+#define c23 .349f
+#define c31 .189f
+#define c32 .769f
+#define c33 .393f
 
     uint8_t floatx4xmm[3][3][4] = { 0 };
     int i, j, k = 0;
