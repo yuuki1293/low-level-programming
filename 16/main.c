@@ -51,12 +51,10 @@ void mulMatrixSepia(struct pixel* p) {
 #define c32 .769f
 #define c33 .393f
 
-    uint8_t floatx4xmm[3][3][4] = { 0 };
+    uint8_t p_vec[3][3][4] = { 0 };
     int i, j, k = 0;
     uint8_t mask_arr[16] __attribute__((aligned(16))) = { 0x00, 0x04, 0x08, 0x0C };
-    __m128i m_mask = _mm_load_si128((__m128i*)mask_arr);
-    uint32_t ret_mask_arr[16] __attribute__((aligned(16))) = { 0xFFFFFFFF };
-    __m128i m_ret_mask = _mm_load_si128((__m128i*)ret_mask_arr);
+    __m128i xm_shuf_mask = _mm_load_si128((__m128i*)mask_arr);
 
     static const float coefficient[3][3][4] = {
         {{c11, c21, c31, c11},
@@ -71,27 +69,27 @@ void mulMatrixSepia(struct pixel* p) {
     };
 
     for (j = 0; j < 12; j++) {
-        floatx4xmm[0][0][j] = p[k / 3].b;
-        floatx4xmm[1][0][j] = p[k / 3].g;
-        floatx4xmm[2][0][j] = p[k / 3].r;
+        p_vec[0][0][j] = p[k / 3].b;
+        p_vec[1][0][j] = p[k / 3].g;
+        p_vec[2][0][j] = p[k / 3].r;
         k++;
     }
 
     for (i = 0; i < 3; i++) {
-        __m128 xmm0, xmm1, xmm2; __m128i xmm3, m_ret;
+        __m128 xm_b, xm_g, xm_r; __m128i xm_inprod;
 
-        xmm0 = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)floatx4xmm[0][i])));
-        xmm1 = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)floatx4xmm[1][i])));
-        xmm2 = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)floatx4xmm[2][i])));
+        xm_b = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)p_vec[0][i])));
+        xm_g = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)p_vec[1][i])));
+        xm_r = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)p_vec[2][i])));
 
-        xmm0 = _mm_mul_ps(xmm0, _mm_load_ps(coefficient[i][0]));
-        xmm1 = _mm_mul_ps(xmm1, _mm_load_ps(coefficient[i][1]));
-        xmm2 = _mm_mul_ps(xmm2, _mm_load_ps(coefficient[i][2]));
+        xm_b = _mm_mul_ps(xm_b, _mm_load_ps(coefficient[i][0]));
+        xm_g = _mm_mul_ps(xm_g, _mm_load_ps(coefficient[i][1]));
+        xm_r = _mm_mul_ps(xm_r, _mm_load_ps(coefficient[i][2]));
 
-        xmm3 = _mm_cvttps_epi32(_mm_add_ps(_mm_add_ps(xmm0, xmm1), xmm2));
+        xm_inprod = _mm_cvttps_epi32(_mm_add_ps(_mm_add_ps(xm_b, xm_g), xm_r));
 
-        m_ret = _mm_shuffle_epi8(xmm3, m_mask);
-        _mm_maskstore_epi32((int*)((uint8_t*)p + 4 * i), m_ret_mask, m_ret);
+        *(int*)((uint8_t*)p + 4 * i) = 
+            _mm_cvtsi128_si32(_mm_shuffle_epi8(xm_inprod, xm_shuf_mask));
     }
 }
 
