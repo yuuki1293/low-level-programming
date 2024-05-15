@@ -28,8 +28,7 @@ run: $(BIN)
 dec: $(OBJDUMP)
 
 deb: $(BIN)
-	cd $(BIN_DIR); \
-	$(DEBUGGER) $(OUT)
+	$(DEBUGGER) $(EXE)
 
 # 実行ファイル作成
 $(EXE): $(OBJ)
