@@ -3,11 +3,14 @@ ASFLAGS = -f elf64 -g -F dwarf
 CC = gcc
 LD = gcc
 CFLAGS = -ansi -pedantic-errors -Wall -Werror -Wextra -ggdb -std=c89 -march=native
+DEBUGGER = gdb
+DEBFLAGS =
 SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = bin
 RES_DIR = res
-EXE = $(BIN_DIR)/main
+OUT = main
+EXE = $(BIN_DIR)/$(OUT)
 C_SRC = $(wildcard $(SRC_DIR)/*.c)
 AS_SRC = $(wildcard $(SRC_DIR)/*.asm)
 OBJ = $(C_SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o) $(AS_SRC:$(SRC_DIR)/%.asm=$(OBJ_DIR)/%.o)
@@ -19,10 +22,14 @@ all: $(BIN)
 
 run: $(BIN)
 	cd $(BIN_DIR); \
-	./main; \
+	./$(OUT); \
 	dotnet fsi combine.fsx
 
 dec: $(OBJDUMP)
+
+deb: $(BIN)
+	cd $(BIN_DIR); \
+	$(DEBUGGER) $(OUT)
 
 # 実行ファイル作成
 $(EXE): $(OBJ)
