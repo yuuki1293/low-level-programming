@@ -12,7 +12,7 @@ float const byte_to_float[] = {
 
 void apply_sepia_filter(struct image* image);
 void apply_sepia_filter_avx(struct image* image);
-void mulMatrixSepia(struct pixel* const p);
+static void mulMatrixSepia(struct pixel* const p);
 static unsigned char sat(uint64_t x);
 static void sepia_one(struct pixel* const pixel);
 
@@ -92,7 +92,7 @@ void apply_sepia_filter_avx(struct image* image) {
     }
 }
 
-void mulMatrixSepia(struct pixel* const p) {
+static void mulMatrixSepia(struct pixel* const p) {
 #define c11 .131f
 #define c12 .534f
 #define c13 .272f
