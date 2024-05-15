@@ -100,7 +100,7 @@ static void mul_matrix_sepia(struct pixel* const p) {
 #define c33 .393f
 
     uint8_t p_vec[3][3][4] = { 0 };
-    int i;
+    int i, j;
     uint8_t mask_arr[16] __attribute__((aligned(16))) = { 0x00, 0x04, 0x08, 0x0C };
     __m128i xm_shuf_mask = _mm_load_si128((__m128i*)mask_arr);
 
@@ -116,10 +116,12 @@ static void mul_matrix_sepia(struct pixel* const p) {
         {c33, c13, c23, c33}},
     };
 
-    for (i = 0; i < 12; i++) {
-        p_vec[0][0][i] = p[i / 3].b;
-        p_vec[1][0][i] = p[i / 3].g;
-        p_vec[2][0][i] = p[i / 3].r;
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 4; j++) {
+            p_vec[0][i][j] = p[i * j / 3].b;
+            p_vec[1][i][j] = p[i * j / 3].g;
+            p_vec[2][i][j] = p[i * j / 3].r;
+        }
     }
 
     for (i = 0; i < 3; i++) {
