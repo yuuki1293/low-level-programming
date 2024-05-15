@@ -92,7 +92,7 @@ void apply_sepia_filter_avx(struct image* image) {
     }
 }
 
-void mulMatrixSepia(struct pixel* p) {
+void mulMatrixSepia(struct pixel* const p) {
 #define c11 .131f
 #define c12 .534f
 #define c13 .272f
