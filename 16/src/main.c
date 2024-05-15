@@ -106,7 +106,7 @@ void mulMatrixSepia(struct pixel* p) {
     uint8_t p_vec[3][3][4] = { 0 };
     int i;
     uint8_t mask_arr[16] __attribute__((aligned(16))) = { 0x00, 0x04, 0x08, 0x0C };
-    const __m128i xm_shuf_mask = _mm_load_si128((__m128i*)mask_arr);
+    __m128i xm_shuf_mask = _mm_load_si128((__m128i*)mask_arr);
 
     static const float coefficient[3][3][4] = {
         {{c11, c21, c31, c11},

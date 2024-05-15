@@ -22,3 +22,6 @@ read_word*
 parse_uint*
 parse_int*
 string_equals*
+
+bin/
+obj/
