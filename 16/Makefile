@@ -22,6 +22,8 @@ run: $(BIN)
 	./main; \
 	dotnet fsi combine.fsx
 
+dec: $(OBJDUMP)
+
 # 実行ファイル作成
 $(EXE): $(OBJ)
 	$(LD) -o $@ $^
@@ -34,15 +36,13 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.asm
 	$(AS) $(ASFLAGS) -o $@ $<
 
-# リソースファイルコピー
-$(BIN_DIR)/%: $(RES_DIR)/%
-	cp -f $< $(BIN_DIR)/
-
-dec: $(OBJDUMP)
-
 # デコンパイル
 $(BIN_DIR)/%.o.txt: $(OBJ_DIR)/%.o
 	objdump -D -M intel-mnemonic $< > $@
+
+# リソースファイルコピー
+$(BIN_DIR)/%: $(RES_DIR)/%
+	cp -f $< $(BIN_DIR)/
 
 clean:
 	rm -f obj/* bin/*
