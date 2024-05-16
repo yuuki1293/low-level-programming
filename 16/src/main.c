@@ -55,58 +55,64 @@ void apply_sepia_filter_avx(struct image* image) {
     }
 }
 
-static void mul_matrix_sepia(struct pixel* const p) {
-#define c11 .131f
-#define c12 .534f
-#define c13 .272f
-#define c21 .168f
-#define c22 .686f
-#define c23 .349f
-#define c31 .189f
-#define c32 .769f
-#define c33 .393f
+static void mul_matrix_sepia(struct pixel* p) {
+    static const __m128 bias_b = { .131, .534, .272, .131 };
+    static const __m128 bias_g = { .168, .686, .349, .168 };
+    static const __m128 bias_r = { .189, .769, .393, .189 };
+    static const __m128i pack_mask = { 0x0004080C00000000 };
+    static const __m128i upack_mask1 = { 0x00FFFFFF00FFFFFF, 0x00FFFFFF03FFFFFF};
+    static const __m128i upack_mask2 = { 0x00FFFFFF00FFFFFF, 0x03FFFFFF03FFFFFF};
+    static const __m128i upack_mask3 = { 0x00FFFFFF03FFFFFF, 0x03FFFFFF03FFFFFF};
+    __m128 xm_b, xm_g, xm_r, bgr1, bgr2, bgr3; __m128i inprod;
+    __m128i bgr1234 = _mm_loadu_si128((const __m128i*)p);
 
-    uint8_t p_vec[3][3][4] = { 0 };
-    int i, j;
-    uint8_t mask_arr[16] __attribute__((aligned(16))) = { 0x00, 0x04, 0x08, 0x0C };
-    __m128i xm_shuf_mask = _mm_load_si128((__m128i*)mask_arr);
+    xm_b = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask1)); /* b1b1b1b2 */
+    bgr1 = _mm_mul_ps(xm_b, bias_b);
+    bgr1234 = _mm_srli_si128(bgr1234, 1);
+    xm_g = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask1));
+    bgr2 = _mm_mul_ps(xm_g, bias_g);
+    bgr1234 = _mm_srli_si128(bgr1234, 1);
+    xm_r = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask1));
+    bgr3 = _mm_mul_ps(xm_r, bias_r);
+    bgr1234 = _mm_srli_si128(bgr1234, 1);
+    inprod = _mm_cvttps_epi32(_mm_add_ps(_mm_add_ps(bgr1, bgr2), bgr3));
+    *(int*)((uint8_t*)p) =_mm_cvtsi128_si32(_mm_shuffle_epi8(inprod, pack_mask));
+    (int*)p++;
+    _mm_permute_ps(bias_b, 0x79); /* 0x79 = 0b0111'1001*/
+    _mm_permute_ps(bias_g, 0x79);
+    _mm_permute_ps(bias_r, 0x79);
 
-    static const float coefficient[3][3][4] = {
-        {{c11, c21, c31, c11},
-        {c12, c22, c32, c12},
-        {c13, c23, c33, c13}},
-        {{c21, c31, c11, c21},
-        {c22, c32, c12, c22},
-        {c23, c33, c13, c23}},
-        {{c31, c11, c21, c31},
-        {c32, c12, c22, c32},
-        {c33, c13, c23, c33}},
-    };
+    xm_b = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask2)); /* b1b1b1b2 */
+    bgr1 = _mm_mul_ps(xm_b, bias_b);
+    bgr1234 = _mm_srli_si128(bgr1234, 1);
+    xm_g = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask2));
+    bgr2 = _mm_mul_ps(xm_g, bias_g);
+    bgr1234 = _mm_srli_si128(bgr1234, 1);
+    xm_r = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask2));
+    bgr3 = _mm_mul_ps(xm_r, bias_r);
+    bgr1234 = _mm_srli_si128(bgr1234, 1);
+    inprod = _mm_cvttps_epi32(_mm_add_ps(_mm_add_ps(bgr1, bgr2), bgr3));
+    *(int*)((uint8_t*)p) =_mm_cvtsi128_si32(_mm_shuffle_epi8(inprod, pack_mask));
+    (int*)p++;
+    _mm_permute_ps(bias_b, 0x79); /* 0x79 = 0b0111'1001*/
+    _mm_permute_ps(bias_g, 0x79);
+    _mm_permute_ps(bias_r, 0x79);
 
-    for (i = 0; i < 3; i++) {
-        for (j = 0; j < 4; j++) {
-            p_vec[0][i][j] = p[i * j / 3].b;
-            p_vec[1][i][j] = p[i * j / 3].g;
-            p_vec[2][i][j] = p[i * j / 3].r;
-        }
-    }
-
-    for (i = 0; i < 3; i++) {
-        __m128 xm_b, xm_g, xm_r; __m128i xm_inprod;
-
-        xm_b = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)p_vec[0][i])));
-        xm_g = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)p_vec[1][i])));
-        xm_r = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(_mm_loadu_si128((__m128i*)p_vec[2][i])));
-
-        xm_b = _mm_mul_ps(xm_b, _mm_load_ps(coefficient[i][0]));
-        xm_g = _mm_mul_ps(xm_g, _mm_load_ps(coefficient[i][1]));
-        xm_r = _mm_mul_ps(xm_r, _mm_load_ps(coefficient[i][2]));
-
-        xm_inprod = _mm_cvttps_epi32(_mm_add_ps(_mm_add_ps(xm_b, xm_g), xm_r));
-
-        *(int*)((uint8_t*)p + 4 * i) = 
-            _mm_cvtsi128_si32(_mm_shuffle_epi8(xm_inprod, xm_shuf_mask));
-    }
+    xm_b = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask3)); /* b1b1b1b2 */
+    bgr1 = _mm_mul_ps(xm_b, bias_b);
+    bgr1234 = _mm_srli_si128(bgr1234, 1);
+    xm_g = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask3));
+    bgr2 = _mm_mul_ps(xm_g, bias_g);
+    bgr1234 = _mm_srli_si128(bgr1234, 1);
+    xm_r = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask3));
+    bgr3 = _mm_mul_ps(xm_r, bias_r);
+    bgr1234 = _mm_srli_si128(bgr1234, 1);
+    inprod = _mm_cvttps_epi32(_mm_add_ps(_mm_add_ps(bgr1, bgr2), bgr3));
+    *(int*)((uint8_t*)p) =_mm_cvtsi128_si32(_mm_shuffle_epi8(inprod, pack_mask));
+    (int*)p++;
+    _mm_permute_ps(bias_b, 0x79); /* 0x79 = 0b0111'1001*/
+    _mm_permute_ps(bias_g, 0x79);
+    _mm_permute_ps(bias_r, 0x79);
 }
 
 void apply_sepia_filter_haxe(struct image* image) {
@@ -132,9 +138,9 @@ void apply_sepia_filter_haxe(struct image* image) {
 static void mul_matrix_sepia_haxe(struct pixel* const p) {
     __m128 bgr1, bgr2, bgr3, bgr4, b1, g1, r1, b2, g2, r2, b3, g3, r3, b4, g4, r4;
     __m128i bgr12, bgr34;
-    static const __m128 bias_b = { .131, .534, .272};
-    static const __m128 bias_g = { .168, .686, .349};
-    static const __m128 bias_r = { .189, .769, .393};
+    static const __m128 bias_b = { .131, .534, .272 };
+    static const __m128 bias_g = { .168, .686, .349 };
+    static const __m128 bias_r = { .189, .769, .393 };
 
     __m128i bgr1234 = _mm_loadu_si128((const __m128i*)p); /* bgr1234 = r4g4b4r3g3b3r2g2b2r1g1b1 */
     bgr1 = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(bgr1234));
