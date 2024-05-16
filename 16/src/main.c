@@ -5,6 +5,9 @@
 #include <sys/resource.h>
 #include <unistd.h>
 #include "bmp.h"
+#include "bench.h"
+
+#define IMAGE_NAME "picture.bmp"
 
 void apply_sepia_filter(struct image* image);
 void apply_sepia_filter_avx(struct image* image);
@@ -15,48 +18,9 @@ static unsigned char sat(uint64_t x);
 static void sepia_one(struct pixel* const pixel);
 
 int main() {
-    struct rusage r;
-    struct timeval start;
-    struct timeval end;
-    long res;
-    struct bmp_header header;
-    struct image image;
-    int i;
-    FILE* fp;
-
-    fp = fopen("log.csv", "w");
-    for (i = 0; i < 128; i++)
-    {
-        load_bmp("picture.bmp", &header, &image);
-        getrusage(RUSAGE_SELF, &r);
-        start = r.ru_utime;
-
-        apply_sepia_filter(&image);
-
-        getrusage(RUSAGE_SELF, &r);
-        end = r.ru_utime;
-        res = ((end.tv_sec - start.tv_sec) * 1000000L) + end.tv_usec - start.tv_usec;
-        fprintf(fp, "%ld\n", res);
-        save_bmp("sepia_picture.bmp", &header, &image);
-    }
-    fclose(fp);
-
-    fp = fopen("log_avx.csv", "w");
-    for (i = 0; i < 128; i++)
-    {
-        load_bmp("picture.bmp", &header, &image);
-        getrusage(RUSAGE_SELF, &r);
-        start = r.ru_utime;
-
-        apply_sepia_filter_avx(&image);
-
-        getrusage(RUSAGE_SELF, &r);
-        end = r.ru_utime;
-        res = ((end.tv_sec - start.tv_sec) * 1000000L) + end.tv_usec - start.tv_usec;
-        fprintf(fp, "%ld\n", res);
-        save_bmp("sepia_picture_avx.bmp", &header, &image);
-    }
-    fclose(fp);
+    bench(&apply_sepia_filter, IMAGE_NAME, "general", 128);
+    bench(&apply_sepia_filter_avx, IMAGE_NAME, "avx", 128);
+    bench(&apply_sepia_filter_haxe, IMAGE_NAME, "haxe", 128);
 
     return 0;
 }
@@ -180,22 +144,22 @@ static void mul_matrix_sepia_haxe(struct pixel* const p) {
     bgr1234 = _mm_srli_si128(bgr1234, 4);
     bgr4 = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(bgr1234));
 
-    b1 = _mm_dp_ps(bgr1, bias_b, 0b0111'0001);
-    g1 = _mm_dp_ps(bgr1, bias_g, 0b0111'0001);
-    r1 = _mm_dp_ps(bgr1, bias_r, 0b0111'0001);
+    b1 = _mm_dp_ps(bgr1, bias_b, 0x71); /* 0x71 = 0b0111'0001*/
+    g1 = _mm_dp_ps(bgr1, bias_g, 0x71);
+    r1 = _mm_dp_ps(bgr1, bias_r, 0x71);
     bgr1 = _mm_unpacklo_ps(_mm_unpacklo_ps(b1, r1), g1);
-    b2 = _mm_dp_ps(bgr2, bias_b, 0b0111'0001);
-    g2 = _mm_dp_ps(bgr2, bias_g, 0b0111'0001);
-    r2 = _mm_dp_ps(bgr2, bias_r, 0b0111'0001);
+    b2 = _mm_dp_ps(bgr2, bias_b, 0x71);
+    g2 = _mm_dp_ps(bgr2, bias_g, 0x71);
+    r2 = _mm_dp_ps(bgr2, bias_r, 0x71);
     bgr2 = _mm_unpacklo_ps(_mm_unpacklo_ps(b2, r2), g2);
     bgr12 = _mm_packus_epi32(_mm_cvttps_epi32(bgr1), _mm_cvttps_epi32(bgr2));
-    b3 = _mm_dp_ps(bgr3, bias_b, 0b0111'0001);
-    g3 = _mm_dp_ps(bgr3, bias_g, 0b0111'0001);
-    r3 = _mm_dp_ps(bgr3, bias_r, 0b0111'0001);
+    b3 = _mm_dp_ps(bgr3, bias_b, 0x71);
+    g3 = _mm_dp_ps(bgr3, bias_g, 0x71);
+    r3 = _mm_dp_ps(bgr3, bias_r, 0x71);
     bgr3 = _mm_unpacklo_ps(_mm_unpacklo_ps(b3, r3), g3);
-    b4 = _mm_dp_ps(bgr4, bias_b, 0b0111'0001);
-    g4 = _mm_dp_ps(bgr4, bias_g, 0b0111'0001);
-    r4 = _mm_dp_ps(bgr4, bias_r, 0b0111'0001);
+    b4 = _mm_dp_ps(bgr4, bias_b, 0x71);
+    g4 = _mm_dp_ps(bgr4, bias_g, 0x71);
+    r4 = _mm_dp_ps(bgr4, bias_r, 0x71);
     bgr4 = _mm_unpacklo_ps(_mm_unpacklo_ps(b4, r4), g4);
     bgr34 = _mm_packus_epi32(_mm_cvttps_epi32(bgr3), _mm_cvttps_epi32(bgr4));
 
