@@ -8,6 +8,7 @@ void bench(void (*target)(struct image*), const char* image_name ,const char* co
 {
     int i;
     char* filename = malloc(sizeof(char) * 30);
+    char* image_name_o = malloc(sizeof(char) * 30);
     FILE* fp;
     struct bmp_header header;
     struct image image;
@@ -17,6 +18,7 @@ void bench(void (*target)(struct image*), const char* image_name ,const char* co
 
     sprintf(filename, "%s.csv", label);
     fp = fopen(filename, "w");
+    sprintf(image_name_o, "%s.bmp", label);
 
     for (i = 0; i < count; i++)
     {
@@ -30,6 +32,8 @@ void bench(void (*target)(struct image*), const char* image_name ,const char* co
         getrusage(RUSAGE_SELF, &r);
         end = r.ru_utime;
         res = ((end.tv_sec - start.tv_sec) * 1000000L) + end.tv_usec - start.tv_usec;
+        
+        save_bmp(image_name_o, &header, &image);
 
         fprintf(fp, "%ld\n", res);
 #ifdef LOG
