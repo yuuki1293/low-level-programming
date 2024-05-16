@@ -8,6 +8,7 @@
 #include "bench.h"
 
 #define IMAGE_NAME "picture.bmp"
+#define COUNT 1
 
 void apply_sepia_filter(struct image* image);
 void apply_sepia_filter_avx(struct image* image);
@@ -18,9 +19,9 @@ static unsigned char sat(uint64_t x);
 static void sepia_one(struct pixel* const pixel);
 
 int main() {
-    bench(&apply_sepia_filter, IMAGE_NAME, "general", 128);
-    bench(&apply_sepia_filter_avx, IMAGE_NAME, "avx", 128);
-    bench(&apply_sepia_filter_haxe, IMAGE_NAME, "haxe", 128);
+    bench(&apply_sepia_filter, IMAGE_NAME, "general", COUNT);
+    bench(&apply_sepia_filter_avx, IMAGE_NAME, "avx", COUNT);
+    bench(&apply_sepia_filter_haxe, IMAGE_NAME, "haxe", COUNT);
 
     return 0;
 }
@@ -113,10 +114,10 @@ void apply_sepia_filter_haxe(struct image* image) {
     struct pixel* pixels = image->array;
     int i = 0;
 
-    while (rest >= 4) {
+    while (rest >= 16) {
         mul_matrix_sepia_haxe(pixels + i);
-        rest -= 4;
-        i += 4;
+        rest -= 16;
+        i += 16;
     }
     while (rest > 0) {
         sepia_one(pixels + i);
@@ -135,7 +136,7 @@ static void mul_matrix_sepia_haxe(struct pixel* const p) {
     static const __m128 bias_g = { .168, .686, .349};
     static const __m128 bias_r = { .189, .769, .393};
 
-    __m128i bgr1234 = _mm_loadu_si128((const __m128i*)p);
+    __m128i bgr1234 = _mm_loadu_si128((const __m128i*)p); /* bgr1234 = r4g4b4r3g3b3r2g2b2r1g1b1 */
     bgr1 = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(bgr1234));
     bgr1234 = _mm_srli_si128(bgr1234, 4);
     bgr2 = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(bgr1234));
