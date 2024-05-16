@@ -55,64 +55,65 @@ void apply_sepia_filter_avx(struct image* image) {
     }
 }
 
-static void mul_matrix_sepia(struct pixel* p) {
-    static const __m128 bias_b = { .131, .534, .272, .131 };
-    static const __m128 bias_g = { .168, .686, .349, .168 };
-    static const __m128 bias_r = { .189, .769, .393, .189 };
-    static const __m128i pack_mask = { 0x0004080C00000000 };
-    static const __m128i upack_mask1 = { 0x00FFFFFF00FFFFFF, 0x00FFFFFF03FFFFFF};
-    static const __m128i upack_mask2 = { 0x00FFFFFF00FFFFFF, 0x03FFFFFF03FFFFFF};
-    static const __m128i upack_mask3 = { 0x00FFFFFF03FFFFFF, 0x03FFFFFF03FFFFFF};
+static void mul_matrix_sepia(struct pixel* const p) {
+    static const __m128i upack_mask1 = { 0xFFFFFF00FFFFFF00, 0xFFFFFF00FFFFFF03};
+    static const __m128i upack_mask2 = { 0xFFFFFF00FFFFFF00, 0xFFFFFF03FFFFFF03};
+    static const __m128i upack_mask3 = { 0xFFFFFF00FFFFFF03, 0xFFFFFF03FFFFFF03};
+    static __m128 coe1 = { .131, .168, .189, .131 };
+    static __m128 coe2 = { .534, .686, .769, .534 };
+    static __m128 coe3 = { .272, .349, .393, .272 };
+    uint8_t* vp = (void*)p;
     __m128 xm_b, xm_g, xm_r, bgr1, bgr2, bgr3; __m128i inprod;
-    __m128i bgr1234 = _mm_loadu_si128((const __m128i*)p);
+    __m128i bgr1234 = _mm_loadu_si128((const __m128i*)vp);
 
     xm_b = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask1)); /* b1b1b1b2 */
-    bgr1 = _mm_mul_ps(xm_b, bias_b);
+    bgr1 = _mm_mul_ps(xm_b, coe1);
     bgr1234 = _mm_srli_si128(bgr1234, 1);
     xm_g = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask1));
-    bgr2 = _mm_mul_ps(xm_g, bias_g);
+    bgr2 = _mm_mul_ps(xm_g, coe2);
     bgr1234 = _mm_srli_si128(bgr1234, 1);
     xm_r = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask1));
-    bgr3 = _mm_mul_ps(xm_r, bias_r);
+    bgr3 = _mm_mul_ps(xm_r, coe3);
     bgr1234 = _mm_srli_si128(bgr1234, 1);
     inprod = _mm_cvttps_epi32(_mm_add_ps(_mm_add_ps(bgr1, bgr2), bgr3));
-    *(int*)((uint8_t*)p) =_mm_cvtsi128_si32(_mm_shuffle_epi8(inprod, pack_mask));
-    (int*)p++;
-    _mm_permute_ps(bias_b, 0x79); /* 0x79 = 0b0111'1001*/
-    _mm_permute_ps(bias_g, 0x79);
-    _mm_permute_ps(bias_r, 0x79);
+    *(int*)vp = _mm_cvtsi128_si32(_mm_packus_epi16(_mm_packs_epi32(inprod, inprod), inprod));
+    vp += 4;
+    coe1 = _mm_permute_ps(coe1, 0x79); /* 0x79 = 0b0111'1001*/
+    coe2 = _mm_permute_ps(coe2, 0x79);
+    coe3 = _mm_permute_ps(coe3, 0x79);
 
     xm_b = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask2)); /* b1b1b1b2 */
-    bgr1 = _mm_mul_ps(xm_b, bias_b);
+    bgr1 = _mm_mul_ps(xm_b, coe1);
     bgr1234 = _mm_srli_si128(bgr1234, 1);
     xm_g = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask2));
-    bgr2 = _mm_mul_ps(xm_g, bias_g);
+    bgr2 = _mm_mul_ps(xm_g, coe2);
     bgr1234 = _mm_srli_si128(bgr1234, 1);
     xm_r = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask2));
-    bgr3 = _mm_mul_ps(xm_r, bias_r);
+    bgr3 = _mm_mul_ps(xm_r, coe3);
     bgr1234 = _mm_srli_si128(bgr1234, 1);
     inprod = _mm_cvttps_epi32(_mm_add_ps(_mm_add_ps(bgr1, bgr2), bgr3));
-    *(int*)((uint8_t*)p) =_mm_cvtsi128_si32(_mm_shuffle_epi8(inprod, pack_mask));
-    (int*)p++;
-    _mm_permute_ps(bias_b, 0x79); /* 0x79 = 0b0111'1001*/
-    _mm_permute_ps(bias_g, 0x79);
-    _mm_permute_ps(bias_r, 0x79);
+    *(int*)vp = _mm_cvtsi128_si32(_mm_packus_epi16(_mm_packs_epi32(inprod, inprod), inprod));
+    vp += 4;
+    coe1 = _mm_permute_ps(coe1, 0x79); /* 0x79 = 0b0111'1001*/
+    coe2 = _mm_permute_ps(coe2, 0x79);
+    coe3 = _mm_permute_ps(coe3, 0x79);
 
     xm_b = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask3)); /* b1b1b1b2 */
-    bgr1 = _mm_mul_ps(xm_b, bias_b);
+    bgr1 = _mm_mul_ps(xm_b, coe1);
     bgr1234 = _mm_srli_si128(bgr1234, 1);
     xm_g = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask3));
-    bgr2 = _mm_mul_ps(xm_g, bias_g);
+    bgr2 = _mm_mul_ps(xm_g, coe2);
     bgr1234 = _mm_srli_si128(bgr1234, 1);
     xm_r = _mm_cvtepi32_ps(_mm_shuffle_epi8(bgr1234, upack_mask3));
-    bgr3 = _mm_mul_ps(xm_r, bias_r);
+    bgr3 = _mm_mul_ps(xm_r, coe3);
     bgr1234 = _mm_srli_si128(bgr1234, 1);
     inprod = _mm_cvttps_epi32(_mm_add_ps(_mm_add_ps(bgr1, bgr2), bgr3));
-    *(int*)((uint8_t*)p) =_mm_cvtsi128_si32(_mm_shuffle_epi8(inprod, pack_mask));
-    (int*)p++;
-    _mm_permute_ps(bias_b, 0x79); /* 0x79 = 0b0111'1001*/
-    _mm_permute_ps(bias_g, 0x79);
-    _mm_permute_ps(bias_r, 0x79);
+    *(int*)vp = _mm_cvtsi128_si32(_mm_packus_epi16(_mm_packs_epi32(inprod, inprod), inprod));
+    vp += 4;
+    coe1 = _mm_permute_ps(coe1, 0x79); /* 0x79 = 0b0111'1001*/
+    coe2 = _mm_permute_ps(coe2, 0x79);
+    coe3 = _mm_permute_ps(coe3, 0x79);
+
 }
 
 void apply_sepia_filter_haxe(struct image* image) {
