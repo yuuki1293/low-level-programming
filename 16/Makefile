@@ -2,7 +2,8 @@ AS = nasm
 ASFLAGS = -f elf64 -g -F dwarf
 CC = gcc
 LD = gcc
-CFLAGS = -ansi -pedantic-errors -Wall -Werror -Wextra -ggdb -std=c89 -march=native
+CDEF = -D LOG
+CFLAGS = -ansi -pedantic-errors -Wall -Werror -Wextra -ggdb -std=c89 -march=native $(CDEF)
 DEBUGGER = gdb
 DEBFLAGS =
 SRC_DIR = src
