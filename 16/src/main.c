@@ -8,7 +8,7 @@
 #include "bench.h"
 
 #define IMAGE_NAME "picture.bmp"
-#define COUNT 1
+#define COUNT 128
 
 void apply_sepia_filter(struct image* image);
 void apply_sepia_filter_avx(struct image* image);
