@@ -14,7 +14,7 @@ void apply_sepia_filter(struct image* image);
 void apply_sepia_filter_avx(struct image* image);
 void apply_sepia_filter_haxe(struct image* image);
 static void mul_matrix_sepia(struct pixel* const p);
-static void mul_matrix_sepia_haxe(struct pixel* const p);
+static void mul_matrix_sepia_haxe(struct pixel* const p, struct pixel* new_p);
 static unsigned char sat(uint64_t x);
 static void sepia_one(struct pixel* const pixel);
 
@@ -113,21 +113,25 @@ static void mul_matrix_sepia(struct pixel* const p) {
     coe1 = _mm_permute_ps(coe1, 0x79); /* 0x79 = 0b0111'1001*/
     coe2 = _mm_permute_ps(coe2, 0x79);
     coe3 = _mm_permute_ps(coe3, 0x79);
-
 }
 
 void apply_sepia_filter_haxe(struct image* image) {
     int rest = image->height * image->width;
     struct pixel* pixels = image->array;
+    struct pixel* new_p = malloc(sizeof(struct pixel) * rest);
     int i = 0;
 
-    while (rest >= 16) {
-        mul_matrix_sepia_haxe(pixels + i);
-        rest -= 16;
-        i += 16;
+    while (rest >= 4) {
+        mul_matrix_sepia_haxe(pixels + i, new_p + i);
+        rest -= 4;
+        i += 4;
     }
+
+    free(image->array);
+    image->array = new_p;
+
     while (rest > 0) {
-        sepia_one(pixels + i);
+        sepia_one(new_p + i);
         rest--;
         i++;
     }
@@ -136,8 +140,9 @@ void apply_sepia_filter_haxe(struct image* image) {
 /**
  * https://x.com/haxe/status/1791095731316748399
  */
-static void mul_matrix_sepia_haxe(struct pixel* const p) {
-    static const __m128i pattern = { 0x0D0905010C080400, 0x0F0B07030E0A0602 };
+static void mul_matrix_sepia_haxe(struct pixel* const p, struct pixel* const new_p) {
+    static const __m128i code1 = { 0x0A07040109060300, 0xFFFFFFFF0B080502 };
+    static const __m128i code2 = { 0x0602090501080400, 0xFFFFFFFF0B07030A };
     static const __m128 bias_bb = { .131f, .131f, .131f, .131f };
     static const __m128 bias_bg = { .534f, .534f, .534f, .534f };
     static const __m128 bias_br = { .272f, .272f, .272f, .272f };
@@ -147,11 +152,10 @@ static void mul_matrix_sepia_haxe(struct pixel* const p) {
     static const __m128 bias_rb = { .189f, .189f, .189f, .189f };
     static const __m128 bias_rg = { .769f, .769f, .769f, .769f };
     static const __m128 bias_rr = { .393f, .393f, .393f, .393f };
-    static const __m128i zero = { 0 };
     __m128 oldb, oldg, oldr, newb, newg, newr;
     __m128i bgr, bg, r_;
 
-    bgr = _mm_shuffle_epi8(_mm_load_si128((const __m128i*)p), pattern);
+    bgr = _mm_shuffle_epi8(_mm_loadu_si128((const __m128i*)p), code1);
     oldb = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(bgr));
     bgr = _mm_srli_si128(bgr, 4);
     oldg = _mm_cvtepi32_ps(_mm_cvtepu8_epi32(bgr));
@@ -160,10 +164,10 @@ static void mul_matrix_sepia_haxe(struct pixel* const p) {
     newb = _mm_fmadd_ps(oldr, bias_br, _mm_fmadd_ps(oldg, bias_bg, _mm_mul_ps(oldb, bias_bb)));
     newg = _mm_fmadd_ps(oldr, bias_gr, _mm_fmadd_ps(oldg, bias_gg, _mm_mul_ps(oldb, bias_gb)));
     bg = _mm_packus_epi32(_mm_cvttps_epi32(newb), _mm_cvttps_epi32(newg));
-    newr = _mm_fmadd_ps(oldr, bias_rr, _mm_fmadd_ps(oldg, bias_rg, _mm_mul_ps(oldg, bias_rb)));
-    r_ = _mm_packus_epi32(_mm_cvttps_epi32(newr), zero);
-    bgr = _mm_shuffle_epi8(_mm_packus_epi16(bg, r_), pattern);
-    _mm_storeu_si128((__m128i*)p, bgr);
+    newr = _mm_fmadd_ps(oldr, bias_rr, _mm_fmadd_ps(oldg, bias_rg, _mm_mul_ps(oldb, bias_rb)));
+    r_ = _mm_packus_epi32(_mm_cvttps_epi32(newr), _mm_setzero_si128());
+    bgr = _mm_shuffle_epi8(_mm_packus_epi16(bg, r_), code2);
+    _mm_storeu_si128((__m128i*)new_p, bgr);
 }
 
 static unsigned char sat(uint64_t x) {
