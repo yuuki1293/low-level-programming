@@ -28,7 +28,7 @@ run: $(BIN)
 
 dec: $(OBJDUMP)
 
-deb: $(BIN)
+gdb: $(BIN)
 	$(DEBUGGER) $(EXE)
 
 # 実行ファイル作成
